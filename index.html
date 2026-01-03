@@ -1,0 +1,4085 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>MODULA - Working Version</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #4cc9f0;
+            --success: #4ade80;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Poppins' sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            ;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            flex-wrap: wrap;
+            height: calc(100vh - 120px);
+        }
+
+        @media (max-width: 1024px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-secondary {
+            background: var(--gray);
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+
+        .mode-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mode-btn {
+            padding: 12px;
+            background: var(--light);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .mode-btn:hover {
+            background: white;
+            border-color: var(--primary);
+        }
+
+        .mode-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .grid-size-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .size-btn {
+            flex: 1;
+            padding: 10px;
+            background: var(--light);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .size-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .export-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .export-btn {
+            padding: 15px;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .export-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .export-btn.active {
+            border-color: var(--primary);
+            background: rgba(67, 97, 238, 0.05);
+        }
+
+        .export-btn i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        /* Grid Styles */
+        .grid-container {
+            width: 100%;
+            height: 600px;
+            background: var(--light);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid var(--border);
+        }
+
+        .grid-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .grid-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .grid-subtitle {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .grid-area {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 8px;
+            width: 600px;
+            height: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+        }
+
+        .grid-cell {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .grid-cell:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-cell.selected {
+            border-color: var(--primary);
+            border-width: 3px;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .cell-content {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .cell-placeholder {
+            color: var(--gray);
+            font-size: 1.5rem;
+            opacity: 0.5;
+        }
+
+        .cell-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cell-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: black;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            cursor: pointer;
+        }
+
+        .grid-cell:hover .video-overlay {
+            opacity: 1;
+        }
+
+        .play-button {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .task-marker {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            background: var(--success);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            z-index: 10;
+        }
+
+        .caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            color: white;
+            padding: 8px;
+            font-size: 12px;
+            text-align: center;
+            max-height: 50%;
+            overflow: hidden;
+            word-wrap: break-word;
+            text-shadow: 
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000,
+                0 0 3px #000,
+                0 0 3px #000;
+            font-weight: 600;
+        }
+
+        .caption:hover {
+            max-height: 100%;
+        }
+
+        .preview-panel {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px solid var(--border);
+        }
+
+        .preview-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        #cell-preview {
+            min-height: 100px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            color: white;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .video-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            padding: 20px;
+        }
+
+        .video-modal.active {
+            display: flex;
+        }
+
+        .video-modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            background: black;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .video-modal-content video {
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .grid-area {
+                width: 100% !important;
+                height: auto !important;
+                aspect-ratio: 1;
+                grid-template-columns: repeat(4, 1fr);
+                /* Will be overridden by JS inline but that is fine as long as structure works */
+            }
+
+            .grid-container {
+                height: auto;
+                min-height: 400px;
+                padding: 10px;
+            }
+
+            .mode-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .export-options {
+                grid-template-columns: 1fr;
+            }
+
+            body {
+                padding: 10px;
+            }
+
+            .app-container {
+                grid-template-columns: 1fr;
+                height: auto;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .sidebar,
+            .main-content {
+                max-height: none;
+                width: 100%;
+            }
+
+            /* Android/Mobile Input Fixes */
+            input[type="text"],
+            input[type="number"],
+            textarea,
+            select {
+                font-size: 16px !important;
+                /* Prevent zoom on focus */
+            }
+
+            .btn {
+                min-height: 48px;
+                /* Larger touch targets */
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+
+            .btn,
+            .mode-btn,
+            .size-btn {
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            .grid-cell {
+                -webkit-tap-highlight-color: rgba(67, 97, 238, 0.2);
+            }
+        }
+
+        /* Drag and drop styles */
+        .grid-cell.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .grid-cell.drag-over {
+            border: 2px dashed var(--primary);
+            background: rgba(67, 97, 238, 0.05);
+        }
+
+        /* Content type menu */
+        .content-menu {
+            position: fixed;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            z-index: 2000;
+            display: none;
+            min-width: 200px;
+        }
+
+        .content-menu.active {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s;
+            margin-bottom: 5px;
+        }
+
+        .menu-item:hover {
+            background: var(--light);
+        }
+
+        .menu-item i {
+            width: 24px;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        /* Audio player styles */
+        .cell-audio {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            position: relative;
+        }
+
+        .audio-controls {
+            text-align: center;
+            width: 100%;
+            padding: 15px;
+        }
+
+        .audio-controls audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* Android touch support */
+        @media (hover: none) and (pointer: coarse) {
+            .grid-cell:hover {
+                transform: none;
+            }
+
+            .menu-item:hover {
+                background: transparent;
+            }
+
+            .menu-item:active {
+                background: var(--light);
+            }
+        }
+
+        /* Responsive improvements for mobile */
+        @media (max-width: 768px) {
+            .content-menu {
+                min-width: 180px;
+                font-size: 0.9rem;
+            }
+
+            .menu-item {
+                padding: 10px 12px;
+            }
+        }
+
+        /* Inline text editing */
+        .cell-text-editable {
+            width: 100%;
+            height: 100%;
+            padding: 15px;
+            font-size: 14px;
+            line-height: 1.4;
+            border: none;
+            outline: none;
+            resize: none;
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+            overflow: auto;
+        }
+
+        .cell-text-editable:focus {
+            background: rgba(67, 97, 238, 0.05);
+        }
+
+        /* Cell editor panel */
+        .cell-editor-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            z-index: 3000;
+            display: none;
+            min-width: 400px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .cell-editor-panel.active {
+            display: block;
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .editor-header h3 {
+            margin: 0;
+            color: var(--dark);
+        }
+
+        .close-editor {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray);
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+
+        .close-editor:hover {
+            color: var(--danger);
+        }
+
+        .editor-control-group {
+            margin-bottom: 20px;
+        }
+
+        .editor-control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .editor-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .editor-value {
+            display: inline-block;
+            margin-left: 10px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .editor-preview {
+            width: 100%;
+            aspect-ratio: 1;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+            background: var(--light);
+            position: relative;
+        }
+
+        .editor-preview img,
+        .editor-preview video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .crop-handle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border: 2px solid white;
+            border-radius: 50%;
+            cursor: move;
+        }
+
+        .crop-overlay {
+            position: absolute;
+            border: 2px dashed var(--primary);
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        /* New Styles for ModulaMediaGrids update */
+        .disclaimer {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 5px;
+            margin-left: 48px;
+            /* Align with text roughly */
+            line-height: 1.3;
+            font-style: italic;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo h1 {
+            font-size: 1.2rem !important;
+            /* Reduced to fit long title */
+            line-height: 1.2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-th-large"></i>
+                    <h1>ModulaMediaGrids - Sample. Share. Shape. Credit: @OBI_JHUAN</h1>
+                </div>
+                <div class="disclaimer">
+                    MODULA is the canvas, not the author<br>
+                    Users are responsible for content they make or share<br>
+                    Educational and fictional content only unless stated
+                </div>
+            </div>
+            <div class="toolbar">
+                <button class="btn btn-sm btn-secondary" id="undo-btn" title="Undo">
+                    <i class="fas fa-undo"></i>
+                </button>
+                <button class="btn btn-sm btn-secondary" id="redo-btn" title="Redo">
+                    <i class="fas fa-redo"></i>
+                </button>
+                <button class="btn btn-sm btn-secondary" id="copy-btn" title="Copy Cell">
+                    <i class="fas fa-copy"></i>
+                </button>
+                <button class="btn btn-sm btn-secondary" id="paste-btn" title="Paste Cell">
+                    <i class="fas fa-paste"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" id="clear-all-btn" title="Clear Grid">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="app-container">
+            <!-- Left Sidebar -->
+            <div class="sidebar">
+                <div class="section">
+                    <h3 class="section-title"><i class="fas fa-cog"></i> Settings</h3>
+
+                    <div class="form-group">
+                        <label>Journal Title</label>
+                        <input type="text" id="journal-title" value="My Media Journal">
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="enable-password-protection" style="width: auto;">
+                            <span>Enable Password Protection</span>
+                            <span id="lock-status" style="margin-left: auto; color: var(--gray);">
+                                <i class="fas fa-unlock-alt"></i> No Password
+                            </span>
+                        </label>
+                        
+                        <div id="password-setup-section" style="display: none; margin-top: 10px;">
+                            <div class="form-group" style="margin-bottom: 10px;">
+                                <label>Set Password:</label>
+                                <div style="display: flex; gap: 5px; align-items: center;">
+                                    <input type="text" id="set-password" placeholder="Enter password (min 4 characters)"
+                                        style="flex: 1; padding: 10px 15px; font-size: 0.95rem; min-width: 200px;">
+                                    <button class="btn btn-sm" id="set-password-btn" title="Set Password">
+                                        <i class="fas fa-key"></i> Set
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="password-unlock-section" style="display: none;">
+                                <div class="form-group" style="margin-bottom: 10px;">
+                                    <label>Unlock File:</label>
+                                    <div style="display: flex; gap: 5px; align-items: center;">
+                                        <input type="text" id="user-password" placeholder="Enter password to unlock"
+                                            style="flex: 1; padding: 10px 15px; font-size: 0.95rem; background: #f8f9fa; min-width: 200px;">
+                                        <button class="btn btn-sm btn-secondary" id="unlock-btn" title="Unlock for editing">
+                                            <i class="fas fa-unlock"></i> Unlock
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-sm btn-danger" id="remove-password-btn" style="width: 100%; margin-top: 5px;">
+                                <i class="fas fa-trash"></i> Remove Password Protection
+                            </button>
+                        </div>
+                        
+                        <small style="color: var(--gray); margin-top: 5px; display: block;">
+                            Optional: Password protects your file. Required to edit imported files.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="journal-description" placeholder="Enter journal description..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Grid Size</label>
+                        <div class="grid-size-selector">
+                            <div class="size-btn" data-size="2">2×2</div>
+                            <div class="size-btn" data-size="3">3×3</div>
+                            <div class="size-btn active" data-size="4">4×4</div>
+                            <div class="size-btn" data-size="5">5×5</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-secondary" id="import-btn" style="margin-top: 10px;">
+                            <i class="fas fa-file-import"></i> Import HTML File
+                        </button>
+                        <input type="file" id="import-file" accept=".html" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title"><i class="fas fa-edit"></i> Content</h3>
+
+                    <div class="mode-buttons">
+                        <div class="mode-btn active" data-mode="text">
+                            <i class="fas fa-font"></i> Text
+                        </div>
+                        <div class="mode-btn" data-mode="image">
+                            <i class="fas fa-image"></i> Image
+                        </div>
+                        <div class="mode-btn" data-mode="video">
+                            <i class="fas fa-video"></i> Video
+                        </div>
+                        <div class="mode-btn" data-mode="audio">
+                            <i class="fas fa-music"></i> Audio
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label id="content-label">Text Content</label>
+                        <textarea id="cell-content" placeholder="Enter content for selected cell..."></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn" id="apply-btn" style="flex: 1;">
+                            <i class="fas fa-check"></i> Apply to Cell
+                        </button>
+                        <button class="btn btn-secondary" id="next-cell-btn" style="flex: 1;">
+                            <i class="fas fa-arrow-right"></i> Next Cell
+                        </button>
+                    </div>
+
+                    <div class="form-group" id="text-style-controls" style="margin-top: 10px;">
+                        <label>Text Style</label>
+
+                        <div style="margin-bottom: 8px;">
+                            <small>Font family</small>
+                            <select id="text-font-family">
+                                <option value="Inter, sans-serif">Inter</option>
+                                <option value="Georgia, serif">Georgia</option>
+                                <option value="Arial, sans-serif">Arial</option>
+                                <option value="'Times New Roman', serif">Times New Roman</option>
+                            </select>
+                        </div>
+
+                        <div style="margin-bottom: 8px;">
+                            <small>Font size (<span id="text-font-size-value">14</span>px)</small>
+                            <input type="range" id="text-font-size" min="10" max="36" value="14">
+                        </div>
+
+                        <div style="margin-bottom: 8px;">
+                            <small>Line spacing (<span id="text-line-height-value">1.4</span>)</small>
+                            <input type="range" id="text-line-height" step="0.1" min="1.0" max="2.5" value="1.4">
+                        </div>
+
+                        <div style="margin-bottom: 8px;">
+                            <small>Text opacity (<span id="text-opacity-value">100</span>%)</small>
+                            <input type="range" id="text-opacity" min="10" max="100" value="100">
+                        </div>
+                    </div>
+
+                    <div class="toolbar" style="margin-top: 15px;">
+                        <button class="btn btn-sm" id="mark-task-btn">
+                            <i class="fas fa-check-circle"></i> Task
+                        </button>
+                        <button class="btn btn-sm btn-danger" id="clear-cell-btn">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title"><i class="fas fa-upload"></i> Media Upload</h3>
+
+                    <div class="form-group">
+                        <input type="file" id="media-upload" accept="image/*,video/*,audio/*" multiple>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="compress-images" checked>
+                            Compress Images
+                        </label>
+                    </div>
+
+                    <button class="btn btn-secondary" id="next-cell-media-btn" style="margin-top: 10px;">
+                        <i class="fas fa-arrow-right"></i> Proceed to Next Cell
+                    </button>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title"><i class="fas fa-layer-group"></i> Overlay Image (QR Code/Link/Comment)</h3>
+
+                    <div class="form-group">
+                        <input type="file" id="overlay-upload" accept="image/*">
+                    </div>
+
+                    <div class="form-group" id="overlay-controls" style="display: none;">
+                        <label>Overlay Size: <span id="overlay-size-value">50</span>%</label>
+                        <input type="range" id="overlay-size" min="10" max="100" value="50">
+                        
+                        <label style="margin-top: 10px;">Opacity: <span id="overlay-opacity-value">100</span>%</label>
+                        <input type="range" id="overlay-opacity" min="0" max="100" value="100">
+                        
+                        <label style="margin-top: 10px;">Brightness: <span id="overlay-brightness-value">100</span>%</label>
+                        <input type="range" id="overlay-brightness" min="0" max="200" value="100">
+                        
+                        <label style="margin-top: 10px;">Contrast: <span id="overlay-contrast-value">100</span>%</label>
+                        <input type="range" id="overlay-contrast" min="0" max="200" value="100">
+                        
+                        <label style="margin-top: 10px;">Saturation: <span id="overlay-saturation-value">100</span>%</label>
+                        <input type="range" id="overlay-saturation" min="0" max="200" value="100">
+                        
+                        <div style="display: flex; gap: 5px; margin-top: 10px;">
+                            <button class="btn btn-sm btn-secondary" id="reset-overlay-size-btn" style="flex: 1;">
+                                <i class="fas fa-undo"></i> Reset Size
+                            </button>
+                            <button class="btn btn-sm btn-secondary" id="reset-overlay-filters-btn" style="flex: 1;">
+                                <i class="fas fa-redo"></i> Reset Filters
+                            </button>
+                            <button class="btn btn-sm btn-danger" id="delete-overlay-btn" style="flex: 1;">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title"><i class="fas fa-caption"></i> Caption</h3>
+
+                    <div class="form-group">
+                        <label>Caption Text</label>
+                        <textarea id="caption-text" placeholder="Enter caption..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Caption Size: <span id="caption-size-value">12</span>px</label>
+                        <input type="range" id="caption-size" min="8" max="24" value="12">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Apply to:</label>
+                        <select id="apply-caption-to">
+                            <option value="selected">Selected Cell</option>
+                            <option value="all">All Cells</option>
+                            <option value="images">All Images</option>
+                            <option value="videos">All Videos</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-secondary" id="apply-caption-btn">
+                        <i class="fas fa-font"></i> Apply Caption
+                    </button>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title"><i class="fas fa-compass"></i> Cell Navigation</h3>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; max-width: 150px; margin: 0 auto;">
+                        <div></div>
+                        <button class="btn btn-sm" id="nav-up-btn" style="grid-column: 2;">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                        <div></div>
+                        <button class="btn btn-sm" id="nav-left-btn">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <button class="btn btn-sm btn-secondary" id="nav-center-btn" style="grid-column: 2;">
+                            <i class="fas fa-dot-circle"></i>
+                        </button>
+                        <button class="btn btn-sm" id="nav-right-btn">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <div></div>
+                        <button class="btn btn-sm" id="nav-down-btn" style="grid-column: 2;">
+                            <i class="fas fa-arrow-down"></i>
+                        </button>
+                        <div></div>
+                    </div>
+                </div>
+
+                <div class="section" id="cell-editor-section" style="display: none;">
+                    <h3 class="section-title"><i class="fas fa-edit"></i> Cell Editor</h3>
+                    <button class="btn btn-secondary" id="open-cell-editor-btn">
+                        <i class="fas fa-sliders-h"></i> Edit Selected Cell
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <div class="grid-container">
+                    <div class="grid-header">
+                        <div class="grid-title" id="display-title">My Media Journal</div>
+                        <div class="grid-subtitle" id="display-date">March 2024</div>
+                    </div>
+
+                    <div class="grid-area" id="grid-area">
+                        <!-- Grid cells will be generated here -->
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title"><i class="fas fa-download"></i> Export</h3>
+
+                    <div class="export-options">
+                        <div class="export-btn active" data-export="html">
+                            <i class="fas fa-file-code"></i>
+                            <div>HTML</div>
+                            <small>5-10 MB</small>
+                        </div>
+                        <div class="export-btn" data-export="zip">
+                            <i class="fas fa-file-archive"></i>
+                            <div>ZIP</div>
+                            <small>3-7 MB</small>
+                        </div>
+                        <div class="export-btn" data-export="screenshot">
+                            <i class="fas fa-camera"></i>
+                            <div>Screenshot</div>
+                            <small>1-2 MB</small>
+                        </div>
+                        <div class="export-btn" data-export="mp4">
+                            <i class="fas fa-video"></i>
+                            <div>MP4</div>
+                            <small>10-20 MB</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quality:</label>
+                        <select id="export-quality">
+                            <option value="high">High</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-success" id="export-btn">
+                        <i class="fas fa-download"></i> Download Package
+                    </button>
+                </div>
+
+                <div class="preview-panel">
+                    <div class="preview-title">Selected Cell Preview</div>
+                    <div id="cell-preview">
+                        Select a cell to preview its content
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div style="text-align: center;">
+            <div class="spinner"></div>
+            <div style="margin-top: 20px; font-size: 1.2rem;" id="loading-text">Processing...</div>
+        </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div class="video-modal" id="video-modal">
+        <div class="video-modal-content">
+            <button class="close-modal" id="close-modal">&times;</button>
+            <video id="modal-video" controls>
+                Your browser doesn't support video
+            </video>
+        </div>
+    </div>
+
+    <!-- Content Type Menu -->
+    <div class="content-menu" id="content-menu">
+        <div class="menu-item" data-type="text">
+            <i class="fas fa-font"></i>
+            <span>Text</span>
+        </div>
+        <div class="menu-item" data-type="image">
+            <i class="fas fa-image"></i>
+            <span>Image</span>
+        </div>
+        <div class="menu-item" data-type="video">
+            <i class="fas fa-video"></i>
+            <span>Video</span>
+        </div>
+        <div class="menu-item" data-type="audio">
+            <i class="fas fa-music"></i>
+            <span>Audio</span>
+        </div>
+        <div class="menu-item" data-type="document">
+            <i class="fas fa-file"></i>
+            <span>Document</span>
+        </div>
+        <div class="menu-item" data-type="poster">
+            <i class="fas fa-image"></i>
+            <span>Poster</span>
+        </div>
+    </div>
+
+    <!-- Cell Editor Panel -->
+    <div class="cell-editor-panel" id="cell-editor-panel">
+        <div class="editor-header">
+            <h3><i class="fas fa-sliders-h"></i> Cell Editor</h3>
+            <button class="close-editor" id="close-editor">&times;</button>
+        </div>
+
+        <div class="editor-preview" id="editor-preview"></div>
+
+        <div class="editor-control-group">
+            <label>
+                Opacity: <span class="editor-value" id="opacity-value">100%</span>
+            </label>
+            <input type="range" class="editor-slider" id="opacity-slider" min="0" max="100" value="100">
+        </div>
+
+        <div class="editor-control-group">
+            <label>
+                Brightness: <span class="editor-value" id="brightness-value">100%</span>
+            </label>
+            <input type="range" class="editor-slider" id="brightness-slider" min="0" max="200" value="100">
+        </div>
+
+        <div class="editor-control-group">
+            <label>
+                Contrast: <span class="editor-value" id="contrast-value">100%</span>
+            </label>
+            <input type="range" class="editor-slider" id="contrast-slider" min="0" max="200" value="100">
+        </div>
+
+        <div class="editor-control-group">
+            <label>
+                Saturation: <span class="editor-value" id="saturation-value">100%</span>
+            </label>
+            <input type="range" class="editor-slider" id="saturation-slider" min="0" max="200" value="100">
+        </div>
+
+        <div class="editor-control-group">
+            <label>
+                Rotation: <span class="editor-value" id="rotation-value">0°</span>
+            </label>
+            <input type="range" class="editor-slider" id="rotation-slider" min="-180" max="180" value="0">
+        </div>
+
+        <div class="editor-control-group">
+            <label>
+                Scale: <span class="editor-value" id="scale-value">100%</span>
+            </label>
+            <input type="range" class="editor-slider" id="scale-slider" min="50" max="200" value="100">
+        </div>
+
+        <div class="editor-control-group">
+            <button class="btn btn-danger" id="reset-editor-btn" style="margin-top: 10px;">
+                <i class="fas fa-undo"></i> Reset All
+            </button>
+        </div>
+
+        <div class="editor-control-group">
+            <button class="btn btn-success" id="apply-editor-btn">
+                <i class="fas fa-check"></i> Apply Changes
+            </button>
+        </div>
+    </div>
+
+    <!-- External Libraries -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <script>
+        // ============================================
+        // MEDIAGRID PRO - WORKING VERSION
+        // ============================================
+
+        // Global state
+        let gridState = {
+            size: 4,
+            cells: [],
+            selectedCell: null,
+            clipboard: null,
+            mode: 'text',
+            undoStack: [],
+            redoStack: [],
+            userCode: null,
+            passwordHash: null,
+            isLocked: false
+        };
+
+        // DOM elements
+        let gridArea, cellPreview;
+
+        // Initialize the application
+        function initApp() {
+            // Get DOM elements
+            gridArea = document.getElementById('grid-area');
+            cellPreview = document.getElementById('cell-preview');
+
+            // Initialize grid
+            initializeGrid();
+
+            // Setup event listeners
+            setupEventListeners();
+
+            // Load saved data
+            loadFromStorage();
+
+            // Show welcome message
+            setTimeout(() => {
+                const firstCell = document.querySelector('.grid-cell');
+                if (firstCell) {
+                    firstCell.click();
+                    document.getElementById('cell-content').value = "Welcome to MODULA! Click a cell to select it, then add text, images, or videos. Everything saves automatically!";
+                }
+            }, 500);
+
+            // Initialize password system
+            // Set checkbox state based on whether password exists
+            if (gridState.passwordHash) {
+                document.getElementById('enable-password-protection').checked = true;
+                document.getElementById('password-setup-section').style.display = 'block';
+            } else {
+                document.getElementById('enable-password-protection').checked = false;
+                document.getElementById('password-setup-section').style.display = 'none';
+            }
+            updateLockStatus();
+            
+            // Initialize User Code (for backward compatibility)
+            if (!gridState.userCode) {
+                gridState.userCode = generateUserCode();
+                saveToStorage();
+            }
+        }
+
+        // Generate unique user code
+        function generateUserCode() {
+            return 'USR-' + Math.random().toString(36).substring(2, 8).toUpperCase() + '-' + Date.now().toString(36).toUpperCase().substring(4);
+        }
+
+        // Initialize the grid
+        function initializeGrid(size = 4) {
+            gridState.size = size;
+            gridState.cells = [];
+
+            // Clear grid area
+            gridArea.innerHTML = '';
+
+            // Update CSS grid
+            gridArea.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+            gridArea.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+
+            // Calculate cell size
+            const cellSize = Math.min(600 / size, 150);
+            gridArea.style.width = `${size * cellSize}px`;
+            gridArea.style.height = `${size * cellSize}px`;
+
+            // Create cells
+            for (let i = 0; i < size * size; i++) {
+                const cell = {
+                    index: i,
+                    type: 'empty',
+                    content: '',
+                    mediaUrl: null,
+                    caption: '',
+                    isTask: false,
+                    thumbnail: null,
+                    opacity: 100,
+                    brightness: 100,
+                    contrast: 100,
+                    saturation: 100,
+                    rotation: 0,
+                    scale: 100,
+                    textFontSize: 14,
+                    textLineHeight: 1.4,
+                    textOpacity: 100,
+                    textFontFamily: 'Inter, sans-serif',
+                    overlayImageUrl: null,
+                    overlayImageSize: 50,
+                    overlayImageX: 50,
+                    overlayImageY: 50,
+                    overlayOpacity: 100,
+                    overlayBrightness: 100,
+                    overlayContrast: 100,
+                    overlaySaturation: 100,
+                    captionSize: 12
+                };
+                gridState.cells.push(cell);
+
+                // Create cell element
+                const cellElement = document.createElement('div');
+                cellElement.className = 'grid-cell';
+                cellElement.dataset.index = i;
+                cellElement.innerHTML = '<div class="cell-content"><div class="cell-placeholder"><i class="fas fa-plus"></i></div></div>';
+
+                // Add click event (simple selection)
+                cellElement.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('play-button') ||
+                        e.target.closest('.play-button')) return;
+                    selectCell(i);
+                });
+
+                // Touch support for Android
+                cellElement.addEventListener('touchend', function (e) {
+                    e.preventDefault();
+                    selectCell(i);
+                });
+
+                // Add drag and drop
+                cellElement.draggable = true;
+
+                cellElement.addEventListener('dragstart', function (e) {
+                    this.classList.add('dragging');
+                    e.dataTransfer.setData('text/plain', i);
+                });
+
+                cellElement.addEventListener('dragend', function () {
+                    this.classList.remove('dragging');
+                    document.querySelectorAll('.grid-cell').forEach(c => c.classList.remove('drag-over'));
+                });
+
+                cellElement.addEventListener('dragover', function (e) {
+                    e.preventDefault();
+                    if (!this.classList.contains('dragging')) {
+                        this.classList.add('drag-over');
+                    }
+                });
+
+                cellElement.addEventListener('dragleave', function () {
+                    this.classList.remove('drag-over');
+                });
+
+                cellElement.addEventListener('drop', function (e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+
+                    const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                    const toIndex = i;
+
+                    if (fromIndex !== toIndex) {
+                        swapCells(fromIndex, toIndex);
+                    }
+                });
+
+                gridArea.appendChild(cellElement);
+            }
+
+            // Update grid size buttons
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.classList.toggle('active', parseInt(btn.dataset.size) === size);
+            });
+            
+            // Update editability after grid is created
+            updateEditability();
+
+            saveToStorage();
+        }
+
+        // Show content menu
+        function showContentMenu(event, cellIndex) {
+            const menu = document.getElementById('content-menu');
+            const rect = event.target.closest('.grid-cell').getBoundingClientRect();
+
+            menu.style.left = rect.left + 'px';
+            menu.style.top = (rect.bottom + 5) + 'px';
+            menu.classList.add('active');
+
+            // Close menu when clicking outside
+            const closeMenu = (e) => {
+                if (!menu.contains(e.target) && !e.target.closest('.grid-cell[data-index="' + cellIndex + '"]')) {
+                    menu.classList.remove('active');
+                    document.removeEventListener('click', closeMenu);
+                    document.removeEventListener('touchend', closeMenu);
+                }
+            };
+
+            setTimeout(() => {
+                document.addEventListener('click', closeMenu);
+                document.addEventListener('touchend', closeMenu);
+            }, 100);
+
+            // Handle menu item clicks
+            const menuItems = menu.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                const handler = (e) => {
+                    e.stopPropagation();
+                    const type = item.dataset.type;
+                    menu.classList.remove('active');
+                    item.removeEventListener('click', handler);
+                    document.removeEventListener('click', closeMenu);
+                    document.removeEventListener('touchend', closeMenu);
+
+                    // Select cell first
+                    selectCell(cellIndex);
+
+                    // Set up one-time file handler for media types
+                    if (type === 'image' || type === 'poster' || type === 'video' || type === 'audio') {
+                        const mediaUpload = document.getElementById('media-upload');
+                        const oneTimeHandler = (e) => {
+                            if (e.target.files.length > 0) {
+                                // Process file immediately
+                                handleMediaUpload(e);
+                            }
+                            mediaUpload.removeEventListener('change', oneTimeHandler);
+                        };
+                        mediaUpload.addEventListener('change', oneTimeHandler);
+
+                        // Set mode and trigger upload
+                        if (type === 'image' || type === 'poster') {
+                            document.querySelector('.mode-btn[data-mode="image"]').click();
+                        } else if (type === 'video') {
+                            document.querySelector('.mode-btn[data-mode="video"]').click();
+                        } else if (type === 'audio') {
+                            document.querySelector('.mode-btn[data-mode="audio"]').click();
+                        }
+
+                        // Small delay to ensure cell is selected, then open file picker
+                        setTimeout(() => {
+                            mediaUpload.click();
+                        }, 100);
+                    } else if (type === 'text') {
+                        document.querySelector('.mode-btn[data-mode="text"]').click();
+                        document.getElementById('cell-content').focus();
+                    } else if (type === 'document') {
+                        // Documents are handled as text for now
+                        document.querySelector('.mode-btn[data-mode="text"]').click();
+                        document.getElementById('cell-content').focus();
+                    }
+                };
+                item.addEventListener('click', handler);
+                item.addEventListener('touchend', handler);
+            });
+        }
+
+        // Select a cell
+        function selectCell(index) {
+            if (gridState.passwordHash && gridState.isLocked) {
+                alert('File is locked. Please enter the password to unlock.');
+                document.getElementById('user-password').focus();
+                return;
+            }
+            
+            // Deselect previous
+            if (gridState.selectedCell !== null) {
+                const prevCell = document.querySelector(`.grid-cell[data-index="${gridState.selectedCell}"]`);
+                if (prevCell) prevCell.classList.remove('selected');
+            }
+
+            // Select new cell
+            gridState.selectedCell = index;
+            const cellElement = document.querySelector(`.grid-cell[data-index="${index}"]`);
+            if (cellElement) {
+                cellElement.classList.add('selected');
+                cellElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                // Navigation Confirmer (Toast)
+                showToast(`Editing Cell #${index + 1}`);
+            }
+
+            // Update preview
+            updatePreview();
+
+            // Update form
+            const cell = gridState.cells[index];
+            const contentInput = document.getElementById('cell-content');
+
+            if (cell.type === 'text') {
+                contentInput.value = cell.content || '';
+            } else {
+                contentInput.value = cell.caption || '';
+            }
+
+            // Determine effective mode to show in UI
+            // If cell is empty, we check the CURRENT ACTIVE mode button to decide if we should trigger upload
+            const activeModeBtn = document.querySelector('.mode-btn.active');
+            let currentMode = activeModeBtn ? activeModeBtn.dataset.mode : 'text';
+
+            // If cell has content, valid mode is the cell's type
+            if (cell.type !== 'empty') {
+                currentMode = cell.type;
+            }
+
+            // Update mode buttons to reflect current valid mode
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.mode === currentMode) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Update label
+            document.getElementById('content-label').textContent =
+                currentMode === 'text' ? 'Text Content' :
+                    currentMode === 'image' ? (cell.type === 'image' ? 'Image Caption' : 'Upload Image') :
+                        currentMode === 'video' ? (cell.type === 'video' ? 'Video Description' : 'Upload Video') :
+                            currentMode === 'audio' ? (cell.type === 'audio' ? 'Audio Description' : 'Upload Audio') : 'Content';
+
+            // Show/hide cell editor section
+            const editorSection = document.getElementById('cell-editor-section');
+            if (cell.type === 'image' || cell.type === 'video') {
+                editorSection.style.display = 'block';
+            } else {
+                editorSection.style.display = 'none';
+            }
+
+            // Show/hide overlay controls
+            const overlayControls = document.getElementById('overlay-controls');
+            if (cell.overlayImageUrl) {
+                overlayControls.style.display = 'block';
+                document.getElementById('overlay-size').value = cell.overlayImageSize || 50;
+                document.getElementById('overlay-size-value').textContent = cell.overlayImageSize || 50;
+                document.getElementById('overlay-opacity').value = cell.overlayOpacity || 100;
+                document.getElementById('overlay-opacity-value').textContent = cell.overlayOpacity || 100;
+                document.getElementById('overlay-brightness').value = cell.overlayBrightness || 100;
+                document.getElementById('overlay-brightness-value').textContent = cell.overlayBrightness || 100;
+                document.getElementById('overlay-contrast').value = cell.overlayContrast || 100;
+                document.getElementById('overlay-contrast-value').textContent = cell.overlayContrast || 100;
+                document.getElementById('overlay-saturation').value = cell.overlaySaturation || 100;
+                document.getElementById('overlay-saturation-value').textContent = cell.overlaySaturation || 100;
+            } else {
+                overlayControls.style.display = 'none';
+            }
+
+            // Sync caption size
+            const captionSizeSlider = document.getElementById('caption-size');
+            const captionSizeValue = document.getElementById('caption-size-value');
+            if (captionSizeSlider && captionSizeValue) {
+                captionSizeSlider.value = cell.captionSize || 12;
+                captionSizeValue.textContent = cell.captionSize || 12;
+            }
+
+            // Sync text style controls with selected cell
+            const styleControls = document.getElementById('text-style-controls');
+            if (styleControls && (cell.type === 'text' || cell.type === 'empty')) {
+                const fontFamilySelect = document.getElementById('text-font-family');
+                const fontSizeSlider = document.getElementById('text-font-size');
+                const fontSizeValue = document.getElementById('text-font-size-value');
+                const lineHeightSlider = document.getElementById('text-line-height');
+                const lineHeightValue = document.getElementById('text-line-height-value');
+                const textOpacitySlider = document.getElementById('text-opacity');
+                const textOpacityValue = document.getElementById('text-opacity-value');
+
+                fontFamilySelect.value = cell.textFontFamily || 'Inter, sans-serif';
+                fontSizeSlider.value = cell.textFontSize || 14;
+                fontSizeValue.textContent = cell.textFontSize || 14;
+                lineHeightSlider.value = cell.textLineHeight || 1.4;
+                lineHeightValue.textContent = cell.textLineHeight || 1.4;
+                textOpacitySlider.value = cell.textOpacity || 100;
+                textOpacityValue.textContent = cell.textOpacity || 100;
+            }
+
+            // IMMEDIATE UPLOAD TRIGGER
+            // If the cell is empty AND the current mode is NOT text (i.e. Image/Video/Audio), open file picker
+            if (cell.type === 'empty' && currentMode !== 'text') {
+                // We need a slight delay to ensure the UI update finishes and it doesn't feel jarring
+                setTimeout(() => {
+                    document.getElementById('media-upload').click();
+                }, 100);
+            }
+        }
+
+        // Helper for Toast Notification
+        function showToast(message) {
+            let toast = document.getElementById('nav-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'nav-toast';
+                toast.style.position = 'fixed';
+                toast.style.bottom = '20px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.background = 'rgba(0,0,0,0.8)';
+                toast.style.color = 'white';
+                toast.style.padding = '10px 20px';
+                toast.style.borderRadius = '30px';
+                toast.style.zIndex = '5000';
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s';
+                toast.style.pointerEvents = 'none'; // Click through
+                document.body.appendChild(toast);
+            }
+            toast.textContent = message;
+            toast.style.opacity = '1';
+
+            // Clear previous timeout if any
+            if (toast.timeout) clearTimeout(toast.timeout);
+
+            toast.timeout = setTimeout(() => {
+                toast.style.opacity = '0';
+            }, 2000);
+        }
+
+        // Update cell preview
+        function updatePreview() {
+            if (gridState.selectedCell === null) {
+                cellPreview.innerHTML = 'Select a cell to preview its content';
+                return;
+            }
+
+            const cell = gridState.cells[gridState.selectedCell];
+            let html = '';
+
+            switch (cell.type) {
+                case 'text':
+                    html = `<strong>Text:</strong><br>${cell.content || '(empty)'}`;
+                    break;
+                case 'image':
+                    html = `<strong>Image</strong><br>`;
+                    if (cell.mediaUrl) {
+                        html += `<img src="${cell.mediaUrl}" style="max-width: 100%; max-height: 150px; margin-top: 10px; border-radius: 5px;">`;
+                    }
+                    if (cell.caption) {
+                        html += `<br><strong>Caption:</strong> ${cell.caption}`;
+                    }
+                    break;
+                case 'video':
+                    html = `<strong>Video</strong><br>`;
+                    if (cell.thumbnail) {
+                        html += `<img src="${cell.thumbnail}" style="max-width: 100%; max-height: 150px; margin-top: 10px; border-radius: 5px;">`;
+                    }
+                    if (cell.caption) {
+                        html += `<br><strong>Description:</strong> ${cell.caption}`;
+                    }
+                    break;
+                case 'audio':
+                    html = `<strong>Audio</strong><br>`;
+                    html += `<div style="background: linear-gradient(135deg, #4361ee, #3a0ca3); color: white; padding: 15px; border-radius: 5px; margin-top: 10px; text-align: center;">`;
+                    html += `<i class="fas fa-music" style="font-size: 2rem;"></i><br>`;
+                    if (cell.mediaUrl) {
+                        html += `<audio controls style="width: 100%; margin-top: 10px;"><source src="${cell.mediaUrl}"></audio>`;
+                    }
+                    html += `</div>`;
+                    if (cell.caption) {
+                        html += `<br><strong>Description:</strong> ${cell.caption}`;
+                    }
+                    break;
+                default:
+                    html = '<em>Empty cell</em>';
+            }
+
+            if (cell.isTask) {
+                html += '<br><span style="color: #4ade80; font-weight: bold;"><i class="fas fa-check-circle"></i> Task</span>';
+            }
+
+            cellPreview.innerHTML = html;
+        }
+
+        // Swap two cells
+        function swapCells(fromIndex, toIndex) {
+            // Save to undo stack
+            saveUndoState();
+
+            // Swap in array
+            [gridState.cells[fromIndex], gridState.cells[toIndex]] =
+                [gridState.cells[toIndex], gridState.cells[fromIndex]];
+
+            // Update indices
+            gridState.cells[fromIndex].index = fromIndex;
+            gridState.cells[toIndex].index = toIndex;
+
+            // Update UI
+            updateCellUI(fromIndex);
+            updateCellUI(toIndex);
+
+            // Update selection if needed
+            if (gridState.selectedCell === fromIndex) {
+                selectCell(toIndex);
+            } else if (gridState.selectedCell === toIndex) {
+                selectCell(fromIndex);
+            }
+
+            saveToStorage();
+        }
+
+        // Update cell UI
+        function updateCellUI(index) {
+            const cell = gridState.cells[index];
+            const cellElement = document.querySelector(`.grid-cell[data-index="${index}"]`);
+            if (!cellElement) return;
+
+            // Clear cell
+            cellElement.innerHTML = '';
+
+            // Create content
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'cell-content';
+
+            switch (cell.type) {
+                case 'text':
+                    const textDiv = document.createElement('div');
+                    textDiv.style.padding = '15px';
+                    textDiv.style.width = '100%';
+                    textDiv.style.height = '100%';
+                    textDiv.style.overflow = 'auto';
+
+                    // Apply per-cell text styles
+                    textDiv.style.fontSize = (cell.textFontSize || 14) + 'px';
+                    textDiv.style.lineHeight = String(cell.textLineHeight || 1.4);
+                    textDiv.style.opacity = (cell.textOpacity || 100) / 100;
+                    textDiv.style.fontFamily = cell.textFontFamily || 'Inter, sans-serif';
+
+                    textDiv.textContent = cell.content || '';
+                    textDiv.contentEditable = true;
+                    textDiv.className = 'cell-text-editable';
+
+                    // Initial auto-fit
+                    setTimeout(() => autoFitText(textDiv), 0);
+
+                    textDiv.addEventListener('blur', function () {
+                        const newContent = this.textContent.trim();
+                        if (newContent !== cell.content) {
+                            saveUndoState();
+                            cell.content = newContent;
+                            saveToStorage();
+                            if (index === gridState.selectedCell) {
+                                updatePreview();
+                            }
+                        }
+                    });
+
+                    textDiv.addEventListener('input', function () {
+                        // Max length check (200 characters)
+                        if (this.textContent.length > 200) {
+                            this.textContent = this.textContent.substring(0, 200);
+
+                            // Restore cursor to end
+                            const range = document.createRange();
+                            const sel = window.getSelection();
+                            range.selectNodeContents(this);
+                            range.collapse(false);
+                            sel.removeAllRanges();
+                            sel.addRange(range);
+                        }
+
+                        // Auto-fit text
+                        autoFitText(this);
+                    });
+
+                    textDiv.addEventListener('keydown', function (e) {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            this.blur();
+                        }
+                    });
+                    contentDiv.appendChild(textDiv);
+                    break;
+
+                case 'image':
+                    const img = document.createElement('img');
+                    img.className = 'cell-image';
+                    img.src = cell.mediaUrl || '';
+                    applyCellFilters(img, cell);
+                    contentDiv.appendChild(img);
+                    break;
+
+                case 'video':
+                    if (cell.thumbnail) {
+                        const thumb = document.createElement('img');
+                        thumb.className = 'cell-image';
+                        thumb.src = cell.thumbnail;
+                        applyCellFilters(thumb, cell);
+                        contentDiv.appendChild(thumb);
+                    } else if (cell.mediaUrl) {
+                        const video = document.createElement('video');
+                        video.className = 'cell-video';
+                        video.src = cell.mediaUrl;
+                        video.muted = true;
+                        applyCellFilters(video, cell);
+                        contentDiv.appendChild(video);
+                    }
+
+                    // Add play overlay
+                    const overlay = document.createElement('div');
+                    overlay.className = 'video-overlay';
+                    overlay.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        playVideo(cell.mediaUrl);
+                    });
+
+                    const playBtn = document.createElement('div');
+                    playBtn.className = 'play-button';
+                    playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    overlay.appendChild(playBtn);
+                    contentDiv.appendChild(overlay);
+                    break;
+
+                case 'audio':
+                    const audioDiv = document.createElement('div');
+                    audioDiv.className = 'cell-audio';
+                    audioDiv.innerHTML = `
+                        <div class="audio-controls">
+                            <i class="fas fa-music" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                            <div style="font-size: 0.8rem; margin-bottom: 5px;">Audio</div>
+                            <audio controls style="width: 100%;">
+                                <source src="${cell.mediaUrl}" type="audio/mpeg">
+                                Your browser doesn't support audio
+                            </audio>
+                        </div>
+                    `;
+                    contentDiv.appendChild(audioDiv);
+                    break;
+
+                default:
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'cell-placeholder';
+                    placeholder.innerHTML = '<i class="fas fa-plus"></i>';
+                    contentDiv.appendChild(placeholder);
+            }
+
+            cellElement.appendChild(contentDiv);
+
+            // Add task marker
+            if (cell.isTask) {
+                const marker = document.createElement('div');
+                marker.className = 'task-marker';
+                marker.innerHTML = '<i class="fas fa-check"></i>';
+                marker.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    toggleTask(index);
+                });
+                cellElement.appendChild(marker);
+            }
+
+            // Add overlay image
+            if (cell.overlayImageUrl) {
+                const overlayImg = document.createElement('img');
+                overlayImg.className = 'overlay-image';
+                overlayImg.src = cell.overlayImageUrl;
+                overlayImg.dataset.cellIndex = index;
+                overlayImg.style.position = 'absolute';
+                overlayImg.style.width = `${cell.overlayImageSize || 50}%`;
+                overlayImg.style.height = 'auto';
+                overlayImg.style.maxWidth = '90%';
+                overlayImg.style.maxHeight = '90%';
+                overlayImg.style.zIndex = '5';
+                overlayImg.style.cursor = 'move';
+                overlayImg.style.userSelect = 'none';
+                
+                // Set position from saved values
+                const x = cell.overlayImageX || 50;
+                const y = cell.overlayImageY || 50;
+                overlayImg.style.left = `${x}%`;
+                overlayImg.style.top = `${y}%`;
+                
+                // Apply filters
+                const opacity = cell.overlayOpacity || 100;
+                const brightness = cell.overlayBrightness || 100;
+                const contrast = cell.overlayContrast || 100;
+                const saturation = cell.overlaySaturation || 100;
+                overlayImg.style.filter = `opacity(${opacity / 100}) brightness(${brightness / 100}) contrast(${contrast / 100}) saturate(${saturation / 100})`;
+                overlayImg.style.transform = 'translate(-50%, -50%)';
+                
+                // Make draggable
+                makeOverlayDraggable(overlayImg, index);
+                
+                cellElement.appendChild(overlayImg);
+            }
+
+            // Add caption
+            if (cell.caption) {
+                const caption = document.createElement('div');
+                caption.className = 'caption';
+                caption.textContent = cell.caption;
+                caption.style.fontSize = `${cell.captionSize || 12}px`;
+                cellElement.appendChild(caption);
+            }
+
+            // Add click event again
+            cellElement.addEventListener('click', function (e) {
+                if (e.target.classList.contains('play-button') ||
+                    e.target.closest('.play-button') ||
+                    e.target.classList.contains('task-marker')) return;
+                selectCell(index);
+            });
+        }
+
+        // Apply cell filters
+        function applyCellFilters(element, cell) {
+            const filter = `opacity(${cell.opacity / 100}) brightness(${cell.brightness / 100}) contrast(${cell.contrast / 100}) saturate(${cell.saturation / 100})`;
+            element.style.filter = filter;
+            element.style.transform = `rotate(${cell.rotation}deg) scale(${cell.scale / 100})`;
+        }
+
+        // Apply content to selected cell
+        function applyContent() {
+            if (!checkEditPermission()) return;
+            
+            if (gridState.selectedCell === null) {
+                alert('Please select a cell first');
+                return;
+            }
+
+            const cell = gridState.cells[gridState.selectedCell];
+            const mode = document.querySelector('.mode-btn.active').dataset.mode;
+            const content = document.getElementById('cell-content').value.trim();
+
+            saveUndoState();
+
+            if (mode === 'text') {
+                if (!content) {
+                    alert('Please enter some text');
+                    return;
+                }
+                cell.type = 'text';
+                cell.content = content;
+            } else if (mode === 'image' || mode === 'video' || mode === 'audio') {
+                // For image/video/audio mode, update caption
+                cell.caption = content;
+                // If cell is empty, trigger upload
+                if (cell.type === 'empty') {
+                    document.getElementById('media-upload').click();
+                    return;
+                }
+            }
+
+            updateCellUI(gridState.selectedCell);
+            updatePreview();
+            saveToStorage();
+            document.getElementById('cell-content').value = '';
+        }
+
+        // Toggle task marker
+        function toggleTask(index) {
+            saveUndoState();
+            gridState.cells[index].isTask = !gridState.cells[index].isTask;
+            updateCellUI(index);
+            saveToStorage();
+        }
+
+        // Clear selected cell
+        function clearCell() {
+            if (gridState.selectedCell === null) {
+                alert('Please select a cell first');
+                return;
+            }
+
+            saveUndoState();
+            const cell = gridState.cells[gridState.selectedCell];
+            cell.type = 'empty';
+            cell.content = '';
+            cell.mediaUrl = null;
+            cell.caption = '';
+            cell.isTask = false;
+            cell.thumbnail = null;
+            cell.opacity = 100;
+            cell.brightness = 100;
+            cell.contrast = 100;
+            cell.saturation = 100;
+            cell.rotation = 0;
+            cell.scale = 100;
+            cell.textFontSize = 14;
+            cell.textLineHeight = 1.4;
+            cell.textOpacity = 100;
+            cell.textFontFamily = 'Inter, sans-serif';
+            cell.overlayImageUrl = null;
+            cell.overlayImageSize = 50;
+            cell.overlayImageX = 50;
+            cell.overlayImageY = 50;
+            cell.overlayOpacity = 100;
+            cell.overlayBrightness = 100;
+            cell.overlayContrast = 100;
+            cell.overlaySaturation = 100;
+            cell.captionSize = 12;
+
+            updateCellUI(gridState.selectedCell);
+            updatePreview();
+            document.getElementById('cell-content').value = '';
+            saveToStorage();
+        }
+
+        // Clear all cells
+        function clearAllCells() {
+            if (!confirm('Are you sure you want to clear the entire grid?')) return;
+
+            saveUndoState();
+            gridState.cells.forEach(cell => {
+                cell.type = 'empty';
+                cell.content = '';
+                cell.mediaUrl = null;
+                cell.caption = '';
+                cell.isTask = false;
+                cell.thumbnail = null;
+                cell.opacity = 100;
+                cell.brightness = 100;
+                cell.contrast = 100;
+                cell.saturation = 100;
+                cell.rotation = 0;
+                cell.scale = 100;
+                cell.overlayImageUrl = null;
+                cell.overlayImageSize = 50;
+                cell.overlayImageX = 50;
+                cell.overlayImageY = 50;
+                cell.overlayOpacity = 100;
+                cell.overlayBrightness = 100;
+                cell.overlayContrast = 100;
+                cell.overlaySaturation = 100;
+                cell.captionSize = 12;
+                cell.textFontSize = 14;
+                cell.textLineHeight = 1.4;
+                cell.textOpacity = 100;
+                cell.textFontFamily = 'Inter, sans-serif';
+            });
+
+            // Update all cells
+            for (let i = 0; i < gridState.cells.length; i++) {
+                updateCellUI(i);
+            }
+
+            saveToStorage();
+        }
+
+        // Copy cell
+        function copyCell() {
+            if (gridState.selectedCell === null) {
+                alert('Please select a cell to copy');
+                return;
+            }
+
+            gridState.clipboard = JSON.parse(JSON.stringify(gridState.cells[gridState.selectedCell]));
+            alert('Cell copied to clipboard');
+        }
+
+        // Paste cell
+        function pasteCell() {
+            if (gridState.selectedCell === null) {
+                alert('Please select a cell to paste into');
+                return;
+            }
+
+            if (!gridState.clipboard) {
+                alert('No cell copied to clipboard');
+                return;
+            }
+
+            saveUndoState();
+            gridState.cells[gridState.selectedCell] = JSON.parse(JSON.stringify(gridState.clipboard));
+            updateCellUI(gridState.selectedCell);
+            updatePreview();
+            saveToStorage();
+            alert('Cell pasted');
+        }
+
+        // Undo
+        function undo() {
+            if (gridState.undoStack.length === 0) return;
+
+            gridState.redoStack.push(JSON.parse(JSON.stringify({
+                cells: gridState.cells,
+                selectedCell: gridState.selectedCell
+            })));
+
+            const state = gridState.undoStack.pop();
+            gridState.cells = state.cells;
+            gridState.selectedCell = state.selectedCell;
+
+            // Update all cells
+            for (let i = 0; i < gridState.cells.length; i++) {
+                updateCellUI(i);
+            }
+
+            // Restore selection
+            if (gridState.selectedCell !== null) {
+                selectCell(gridState.selectedCell);
+            }
+
+            saveToStorage();
+        }
+
+        // Redo
+        function redo() {
+            if (gridState.redoStack.length === 0) return;
+
+            gridState.undoStack.push(JSON.parse(JSON.stringify({
+                cells: gridState.cells,
+                selectedCell: gridState.selectedCell
+            })));
+
+            const state = gridState.redoStack.pop();
+            gridState.cells = state.cells;
+            gridState.selectedCell = state.selectedCell;
+
+            // Update all cells
+            for (let i = 0; i < gridState.cells.length; i++) {
+                updateCellUI(i);
+            }
+
+            // Restore selection
+            if (gridState.selectedCell !== null) {
+                selectCell(gridState.selectedCell);
+            }
+
+            saveToStorage();
+        }
+
+        // Save undo state
+        function saveUndoState() {
+            gridState.undoStack.push(JSON.parse(JSON.stringify({
+                cells: gridState.cells,
+                selectedCell: gridState.selectedCell
+            })));
+
+            // Limit undo stack size
+            if (gridState.undoStack.length > 50) {
+                gridState.undoStack.shift();
+            }
+
+            // Clear redo stack
+            gridState.redoStack = [];
+        }
+
+        // Play video
+        function playVideo(url) {
+            const modal = document.getElementById('video-modal');
+            const video = document.getElementById('modal-video');
+
+            video.src = url;
+            modal.classList.add('active');
+            video.play();
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Grid size buttons
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const size = parseInt(this.dataset.size);
+                    if (size < gridState.size) {
+                        if (!confirm(`Shrinking grid will lose data. Continue?`)) return;
+                    }
+                    initializeGrid(size);
+                });
+            });
+
+            // Mode buttons
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const mode = this.dataset.mode;
+                    const label = document.getElementById('content-label');
+                    const cell = gridState.selectedCell !== null ? gridState.cells[gridState.selectedCell] : null;
+
+                    if (mode === 'text') {
+                        label.textContent = 'Text Content';
+                    } else if (mode === 'image') {
+                        label.textContent = cell && cell.type === 'image' ? 'Image Caption' : 'Upload Image';
+                    } else if (mode === 'video') {
+                        label.textContent = cell && cell.type === 'video' ? 'Video Description' : 'Upload Video';
+                    } else if (mode === 'audio') {
+                        label.textContent = cell && cell.type === 'audio' ? 'Audio Description' : 'Upload Audio';
+                    }
+                });
+            });
+
+            // Apply button
+            document.getElementById('apply-btn').addEventListener('click', applyContent);
+
+            // Mark task button
+            document.getElementById('mark-task-btn').addEventListener('click', function () {
+                if (gridState.selectedCell !== null) {
+                    toggleTask(gridState.selectedCell);
+                }
+            });
+
+            // Clear cell button
+            document.getElementById('clear-cell-btn').addEventListener('click', clearCell);
+
+            // Clear all button
+            document.getElementById('clear-all-btn').addEventListener('click', clearAllCells);
+
+            // Copy button
+            document.getElementById('copy-btn').addEventListener('click', copyCell);
+
+            // Paste button
+            document.getElementById('paste-btn').addEventListener('click', pasteCell);
+
+            // Undo/Redo buttons
+            document.getElementById('undo-btn').addEventListener('click', undo);
+            document.getElementById('redo-btn').addEventListener('click', redo);
+
+            // Media upload
+            document.getElementById('media-upload').addEventListener('change', handleMediaUpload);
+
+            // Overlay image upload
+            document.getElementById('overlay-upload').addEventListener('change', handleOverlayUpload);
+
+            // Overlay size slider
+            const overlaySizeSlider = document.getElementById('overlay-size');
+            const overlaySizeValue = document.getElementById('overlay-size-value');
+            if (overlaySizeSlider && overlaySizeValue) {
+                overlaySizeSlider.addEventListener('input', function() {
+                    overlaySizeValue.textContent = this.value;
+                    if (gridState.selectedCell !== null) {
+                        saveUndoState();
+                        const cell = gridState.cells[gridState.selectedCell];
+                        cell.overlayImageSize = parseInt(this.value);
+                        updateCellUI(gridState.selectedCell);
+                        saveToStorage();
+                    }
+                });
+            }
+
+            // Overlay opacity slider
+            const overlayOpacitySlider = document.getElementById('overlay-opacity');
+            const overlayOpacityValue = document.getElementById('overlay-opacity-value');
+            if (overlayOpacitySlider && overlayOpacityValue) {
+                overlayOpacitySlider.addEventListener('input', function() {
+                    overlayOpacityValue.textContent = this.value;
+                    if (gridState.selectedCell !== null) {
+                        saveUndoState();
+                        const cell = gridState.cells[gridState.selectedCell];
+                        cell.overlayOpacity = parseInt(this.value);
+                        updateCellUI(gridState.selectedCell);
+                        saveToStorage();
+                    }
+                });
+            }
+
+            // Overlay brightness slider
+            const overlayBrightnessSlider = document.getElementById('overlay-brightness');
+            const overlayBrightnessValue = document.getElementById('overlay-brightness-value');
+            if (overlayBrightnessSlider && overlayBrightnessValue) {
+                overlayBrightnessSlider.addEventListener('input', function() {
+                    overlayBrightnessValue.textContent = this.value;
+                    if (gridState.selectedCell !== null) {
+                        saveUndoState();
+                        const cell = gridState.cells[gridState.selectedCell];
+                        cell.overlayBrightness = parseInt(this.value);
+                        updateCellUI(gridState.selectedCell);
+                        saveToStorage();
+                    }
+                });
+            }
+
+            // Overlay contrast slider
+            const overlayContrastSlider = document.getElementById('overlay-contrast');
+            const overlayContrastValue = document.getElementById('overlay-contrast-value');
+            if (overlayContrastSlider && overlayContrastValue) {
+                overlayContrastSlider.addEventListener('input', function() {
+                    overlayContrastValue.textContent = this.value;
+                    if (gridState.selectedCell !== null) {
+                        saveUndoState();
+                        const cell = gridState.cells[gridState.selectedCell];
+                        cell.overlayContrast = parseInt(this.value);
+                        updateCellUI(gridState.selectedCell);
+                        saveToStorage();
+                    }
+                });
+            }
+
+            // Overlay saturation slider
+            const overlaySaturationSlider = document.getElementById('overlay-saturation');
+            const overlaySaturationValue = document.getElementById('overlay-saturation-value');
+            if (overlaySaturationSlider && overlaySaturationValue) {
+                overlaySaturationSlider.addEventListener('input', function() {
+                    overlaySaturationValue.textContent = this.value;
+                    if (gridState.selectedCell !== null) {
+                        saveUndoState();
+                        const cell = gridState.cells[gridState.selectedCell];
+                        cell.overlaySaturation = parseInt(this.value);
+                        updateCellUI(gridState.selectedCell);
+                        saveToStorage();
+                    }
+                });
+            }
+
+            // Reset overlay size button
+            document.getElementById('reset-overlay-size-btn').addEventListener('click', function() {
+                if (gridState.selectedCell !== null) {
+                    saveUndoState();
+                    const cell = gridState.cells[gridState.selectedCell];
+                    cell.overlayImageSize = 50;
+                    overlaySizeSlider.value = 50;
+                    overlaySizeValue.textContent = '50';
+                    updateCellUI(gridState.selectedCell);
+                    saveToStorage();
+                }
+            });
+
+            // Reset overlay filters button
+            document.getElementById('reset-overlay-filters-btn').addEventListener('click', function() {
+                if (gridState.selectedCell !== null) {
+                    saveUndoState();
+                    const cell = gridState.cells[gridState.selectedCell];
+                    cell.overlayOpacity = 100;
+                    cell.overlayBrightness = 100;
+                    cell.overlayContrast = 100;
+                    cell.overlaySaturation = 100;
+                    
+                    overlayOpacitySlider.value = 100;
+                    overlayOpacityValue.textContent = '100';
+                    overlayBrightnessSlider.value = 100;
+                    overlayBrightnessValue.textContent = '100';
+                    overlayContrastSlider.value = 100;
+                    overlayContrastValue.textContent = '100';
+                    overlaySaturationSlider.value = 100;
+                    overlaySaturationValue.textContent = '100';
+                    
+                    updateCellUI(gridState.selectedCell);
+                    saveToStorage();
+                }
+            });
+
+            // Next cell button (next to Apply to Cell)
+            document.getElementById('next-cell-btn').addEventListener('click', proceedToNextCell);
+
+            // Next cell button (next to Media Upload)
+            document.getElementById('next-cell-media-btn').addEventListener('click', proceedToNextCell);
+
+            // Caption size slider
+            const captionSizeSlider = document.getElementById('caption-size');
+            const captionSizeValue = document.getElementById('caption-size-value');
+            if (captionSizeSlider && captionSizeValue) {
+                captionSizeSlider.addEventListener('input', function() {
+                    captionSizeValue.textContent = this.value;
+                    if (gridState.selectedCell !== null) {
+                        saveUndoState();
+                        const cell = gridState.cells[gridState.selectedCell];
+                        cell.captionSize = parseInt(this.value);
+                        updateCellUI(gridState.selectedCell);
+                        saveToStorage();
+                    }
+                });
+            }
+
+            // Navigation buttons
+            document.getElementById('nav-up-btn').addEventListener('click', () => navigateCell('up'));
+            document.getElementById('nav-down-btn').addEventListener('click', () => navigateCell('down'));
+            document.getElementById('nav-left-btn').addEventListener('click', () => navigateCell('left'));
+            document.getElementById('nav-right-btn').addEventListener('click', () => navigateCell('right'));
+            document.getElementById('nav-center-btn').addEventListener('click', function() {
+                if (gridState.selectedCell !== null) {
+                    showToast(`Current Cell: #${gridState.selectedCell + 1}`);
+                } else {
+                    alert('No cell selected');
+                }
+            });
+
+            // Apply caption button
+            document.getElementById('apply-caption-btn').addEventListener('click', applyCaption);
+
+            // Export buttons
+            document.querySelectorAll('.export-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    document.querySelectorAll('.export-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Export button
+            document.getElementById('export-btn').addEventListener('click', exportJournal);
+
+            // Import button
+            document.getElementById('import-btn').addEventListener('click', function () {
+                document.getElementById('import-file').click();
+            });
+
+            document.getElementById('import-file').addEventListener('change', handleImport);
+
+            // Journal title
+            document.getElementById('journal-title').addEventListener('input', function () {
+                document.getElementById('display-title').textContent = this.value || 'My Media Journal';
+                saveToStorage();
+            });
+
+            // Journal description
+            document.getElementById('journal-description').addEventListener('input', function () {
+                document.getElementById('display-date').textContent = this.value;
+                saveToStorage();
+            });
+
+            // Close video modal
+            document.getElementById('close-modal').addEventListener('click', function () {
+                document.getElementById('video-modal').classList.remove('active');
+                document.getElementById('modal-video').pause();
+            });
+
+            // Close modal when clicking outside
+            document.getElementById('video-modal').addEventListener('click', function (e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    document.getElementById('modal-video').pause();
+                }
+            });
+
+            // Auto-save every 3 seconds
+            setInterval(saveToStorage, 3000);
+
+            // Cell editor button
+            document.getElementById('open-cell-editor-btn').addEventListener('click', openCellEditor);
+            document.getElementById('close-editor').addEventListener('click', closeCellEditor);
+            document.getElementById('apply-editor-btn').addEventListener('click', applyCellEditor);
+            document.getElementById('reset-editor-btn').addEventListener('click', resetCellEditor);
+
+            // Editor sliders
+            // Editor sliders
+            setupEditorSliders();
+
+            // Delete overlay button
+            document.getElementById('delete-overlay-btn').addEventListener('click', function() {
+                if (gridState.selectedCell === null) {
+                    alert('Please select a cell first');
+                    return;
+                }
+                
+                if (!confirm('Are you sure you want to delete the overlay image?')) {
+                    return;
+                }
+                
+                saveUndoState();
+                const cell = gridState.cells[gridState.selectedCell];
+                cell.overlayImageUrl = null;
+                cell.overlayImageX = 50;
+                cell.overlayImageY = 50;
+                updateCellUI(gridState.selectedCell);
+                updatePreview();
+                saveToStorage();
+                
+                // Hide overlay controls
+                document.getElementById('overlay-controls').style.display = 'none';
+            });
+
+            // Password protection checkbox
+            document.getElementById('enable-password-protection').addEventListener('change', function() {
+                const passwordSection = document.getElementById('password-setup-section');
+                if (this.checked) {
+                    passwordSection.style.display = 'block';
+                    // If password is already set, show unlock section
+                    if (gridState.passwordHash) {
+                        document.getElementById('password-unlock-section').style.display = 'block';
+                    } else {
+                        document.getElementById('password-unlock-section').style.display = 'none';
+                    }
+                } else {
+                    passwordSection.style.display = 'none';
+                    // If user unchecks, ask if they want to remove password
+                    if (gridState.passwordHash) {
+                        if (confirm('Do you want to remove password protection? This will unlock the file permanently.')) {
+                            removePassword();
+                        } else {
+                            this.checked = true; // Keep checkbox checked
+                        }
+                    }
+                }
+            });
+
+            // Password system
+            document.getElementById('set-password-btn').addEventListener('click', setPassword);
+            document.getElementById('unlock-btn').addEventListener('click', unlockWithPassword);
+            document.getElementById('remove-password-btn').addEventListener('click', removePassword);
+            
+            // Allow Enter key to unlock
+            document.getElementById('user-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    unlockWithPassword();
+                }
+            });
+            
+            // Allow Enter key to set password
+            document.getElementById('set-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    setPassword();
+                }
+            });
+
+            // Text style controls
+            const fontFamilySelect = document.getElementById('text-font-family');
+            const fontSizeSlider = document.getElementById('text-font-size');
+            const fontSizeValue = document.getElementById('text-font-size-value');
+            const lineHeightSlider = document.getElementById('text-line-height');
+            const lineHeightValue = document.getElementById('text-line-height-value');
+            const textOpacitySlider = document.getElementById('text-opacity');
+            const textOpacityValue = document.getElementById('text-opacity-value');
+
+            function applyTextStyleChange() {
+                if (gridState.selectedCell === null) return;
+                const cell = gridState.cells[gridState.selectedCell];
+                if (cell.type !== 'text' && cell.type !== 'empty') return;
+
+                saveUndoState();
+
+                cell.textFontFamily = fontFamilySelect.value;
+                cell.textFontSize = parseInt(fontSizeSlider.value);
+                cell.textLineHeight = parseFloat(lineHeightSlider.value);
+                cell.textOpacity = parseInt(textOpacitySlider.value);
+
+                updateCellUI(gridState.selectedCell);
+                updatePreview();
+                saveToStorage();
+            }
+
+            if (fontFamilySelect && fontSizeSlider && lineHeightSlider && textOpacitySlider) {
+                fontFamilySelect.addEventListener('change', applyTextStyleChange);
+                fontSizeSlider.addEventListener('input', () => {
+                    fontSizeValue.textContent = fontSizeSlider.value;
+                    applyTextStyleChange();
+                });
+                lineHeightSlider.addEventListener('input', () => {
+                    lineHeightValue.textContent = lineHeightSlider.value;
+                    applyTextStyleChange();
+                });
+                textOpacitySlider.addEventListener('input', () => {
+                    textOpacityValue.textContent = textOpacitySlider.value;
+                    applyTextStyleChange();
+                });
+            }
+        }
+
+        // Setup editor sliders
+        function setupEditorSliders() {
+            const sliders = ['opacity', 'brightness', 'contrast', 'saturation', 'rotation', 'scale'];
+            sliders.forEach(slider => {
+                const sliderEl = document.getElementById(`${slider}-slider`);
+                const valueEl = document.getElementById(`${slider}-value`);
+
+                sliderEl.addEventListener('input', function () {
+                    const value = parseInt(this.value);
+                    if (slider === 'rotation') {
+                        valueEl.textContent = `${value}°`;
+                    } else {
+                        valueEl.textContent = `${value}%`;
+                    }
+                    updateEditorPreview();
+                });
+            });
+        }
+
+        // Open cell editor
+        function openCellEditor() {
+            if (gridState.selectedCell === null) {
+                alert('Please select a cell first');
+                return;
+            }
+
+            const cell = gridState.cells[gridState.selectedCell];
+            if (cell.type === 'empty' || cell.type === 'text') {
+                alert('Cell editor is only available for images and videos');
+                return;
+            }
+
+            // Show editor section if hidden
+            document.getElementById('cell-editor-section').style.display = 'block';
+
+            // Load current values
+            document.getElementById('opacity-slider').value = cell.opacity || 100;
+            document.getElementById('brightness-slider').value = cell.brightness || 100;
+            document.getElementById('contrast-slider').value = cell.contrast || 100;
+            document.getElementById('saturation-slider').value = cell.saturation || 100;
+            document.getElementById('rotation-slider').value = cell.rotation || 0;
+            document.getElementById('scale-slider').value = cell.scale || 100;
+
+            // Update value displays
+            document.getElementById('opacity-value').textContent = `${cell.opacity || 100}%`;
+            document.getElementById('brightness-value').textContent = `${cell.brightness || 100}%`;
+            document.getElementById('contrast-value').textContent = `${cell.contrast || 100}%`;
+            document.getElementById('saturation-value').textContent = `${cell.saturation || 100}%`;
+            document.getElementById('rotation-value').textContent = `${cell.rotation || 0}°`;
+            document.getElementById('scale-value').textContent = `${cell.scale || 100}%`;
+
+            // Update preview
+            updateEditorPreview();
+
+            // Show panel
+            document.getElementById('cell-editor-panel').classList.add('active');
+        }
+
+        // Close cell editor
+        function closeCellEditor() {
+            document.getElementById('cell-editor-panel').classList.remove('active');
+        }
+
+        // Close editor when clicking outside
+        document.addEventListener('click', function (e) {
+            const editorPanel = document.getElementById('cell-editor-panel');
+            if (editorPanel.classList.contains('active') &&
+                !editorPanel.contains(e.target) &&
+                !e.target.closest('#open-cell-editor-btn')) {
+                closeCellEditor();
+            }
+        });
+
+        // Update editor preview
+        function updateEditorPreview() {
+            const preview = document.getElementById('editor-preview');
+            const cell = gridState.cells[gridState.selectedCell];
+            if (!cell) return;
+
+            preview.innerHTML = '';
+
+            if (cell.type === 'image' && cell.mediaUrl) {
+                const img = document.createElement('img');
+                img.src = cell.mediaUrl;
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+
+                const opacity = parseInt(document.getElementById('opacity-slider').value);
+                const brightness = parseInt(document.getElementById('brightness-slider').value);
+                const contrast = parseInt(document.getElementById('contrast-slider').value);
+                const saturation = parseInt(document.getElementById('saturation-slider').value);
+                const rotation = parseInt(document.getElementById('rotation-slider').value);
+                const scale = parseInt(document.getElementById('scale-slider').value);
+
+                img.style.filter = `opacity(${opacity / 100}) brightness(${brightness / 100}) contrast(${contrast / 100}) saturate(${saturation / 100})`;
+                img.style.transform = `rotate(${rotation}deg) scale(${scale / 100})`;
+
+                preview.appendChild(img);
+            } else if (cell.type === 'video' && (cell.thumbnail || cell.mediaUrl)) {
+                const video = document.createElement('video');
+                video.src = cell.thumbnail || cell.mediaUrl;
+                video.style.width = '100%';
+                video.style.height = '100%';
+                video.style.objectFit = 'cover';
+                video.muted = true;
+
+                const opacity = parseInt(document.getElementById('opacity-slider').value);
+                const brightness = parseInt(document.getElementById('brightness-slider').value);
+                const contrast = parseInt(document.getElementById('contrast-slider').value);
+                const saturation = parseInt(document.getElementById('saturation-slider').value);
+                const rotation = parseInt(document.getElementById('rotation-slider').value);
+                const scale = parseInt(document.getElementById('scale-slider').value);
+
+                video.style.filter = `opacity(${opacity / 100}) brightness(${brightness / 100}) contrast(${contrast / 100}) saturate(${saturation / 100})`;
+                video.style.transform = `rotate(${rotation}deg) scale(${scale / 100})`;
+
+                preview.appendChild(video);
+            }
+        }
+
+        // Apply cell editor changes
+        function applyCellEditor() {
+            if (gridState.selectedCell === null) return;
+
+            saveUndoState();
+
+            const cell = gridState.cells[gridState.selectedCell];
+            cell.opacity = parseInt(document.getElementById('opacity-slider').value);
+            cell.brightness = parseInt(document.getElementById('brightness-slider').value);
+            cell.contrast = parseInt(document.getElementById('contrast-slider').value);
+            cell.saturation = parseInt(document.getElementById('saturation-slider').value);
+            cell.rotation = parseInt(document.getElementById('rotation-slider').value);
+            cell.scale = parseInt(document.getElementById('scale-slider').value);
+
+            updateCellUI(gridState.selectedCell);
+            updatePreview();
+            saveToStorage();
+            closeCellEditor();
+        }
+
+        // Reset cell editor
+        function resetCellEditor() {
+            document.getElementById('opacity-slider').value = 100;
+            document.getElementById('brightness-slider').value = 100;
+            document.getElementById('contrast-slider').value = 100;
+            document.getElementById('saturation-slider').value = 100;
+            document.getElementById('rotation-slider').value = 0;
+            document.getElementById('scale-slider').value = 100;
+
+            document.getElementById('opacity-value').textContent = '100%';
+            document.getElementById('brightness-value').textContent = '100%';
+            document.getElementById('contrast-value').textContent = '100%';
+            document.getElementById('saturation-value').textContent = '100%';
+            document.getElementById('rotation-value').textContent = '0°';
+            document.getElementById('scale-value').textContent = '100%';
+
+            updateEditorPreview();
+        }
+
+        // Handle media upload
+        async function handleMediaUpload(e) {
+            if (!checkEditPermission()) {
+                e.target.value = '';
+                return;
+            }
+            
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+
+            // If multiple files selected, automatically fill grid starting from first empty cell
+            let startIndex = 0;
+            if (gridState.selectedCell !== null) {
+                startIndex = gridState.selectedCell;
+            } else {
+                // Find first empty cell
+                for (let i = 0; i < gridState.cells.length; i++) {
+                    if (gridState.cells[i].type === 'empty') {
+                        startIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            const totalCells = gridState.size * gridState.size;
+            const maxFiles = Math.min(files.length, totalCells - startIndex);
+            
+            if (maxFiles < files.length) {
+                alert(`Only ${maxFiles} file(s) can be uploaded. The grid has ${totalCells} cells and ${startIndex} are already filled.`);
+            }
+
+            showLoading(`Processing ${maxFiles} file(s)...`);
+
+            for (let i = 0; i < maxFiles; i++) {
+                const file = files[i];
+                const targetIndex = startIndex + i;
+
+                try {
+                    await processMediaFile(file, targetIndex);
+                    // Auto-select the cell being filled
+                    if (i === 0) {
+                        selectCell(targetIndex);
+                    }
+                } catch (error) {
+                    console.error('Error processing file:', error);
+                }
+            }
+
+            hideLoading();
+            e.target.value = '';
+            
+            if (maxFiles > 0) {
+                alert(`Successfully uploaded ${maxFiles} file(s) to the grid!`);
+            }
+        }
+
+        // Process media file
+        function processMediaFile(file, index) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                const isVideo = file.type.startsWith('video/');
+                const isAudio = file.type.startsWith('audio/');
+
+                reader.onload = function (e) {
+                    saveUndoState();
+
+                    const cell = gridState.cells[index];
+
+                    if (isAudio) {
+                        cell.type = 'audio';
+                        cell.mediaUrl = e.target.result;
+                        cell.mediaFile = file;
+                        updateCellUI(index);
+                        if (index === gridState.selectedCell) {
+                            updatePreview();
+                        }
+                        saveToStorage();
+                        resolve();
+                    } else if (isVideo) {
+                        cell.type = 'video';
+                        cell.mediaUrl = e.target.result;
+                        cell.mediaFile = file;
+                        // Generate thumbnail for video
+                        generateVideoThumbnail(file).then(thumbnail => {
+                            cell.thumbnail = thumbnail;
+                            updateCellUI(index);
+                            if (index === gridState.selectedCell) {
+                                updatePreview();
+                            }
+                            saveToStorage();
+                            resolve();
+                        }).catch(() => {
+                            updateCellUI(index);
+                            if (index === gridState.selectedCell) {
+                                updatePreview();
+                            }
+                            saveToStorage();
+                            resolve();
+                        });
+                    } else {
+                        cell.type = 'image';
+                        cell.mediaUrl = e.target.result;
+                        cell.mediaFile = file;
+                        // Compress image if needed
+                        if (document.getElementById('compress-images').checked) {
+                            compressImage(e.target.result).then(compressed => {
+                                cell.mediaUrl = compressed;
+                                updateCellUI(index);
+                                if (index === gridState.selectedCell) {
+                                    updatePreview();
+                                }
+                                saveToStorage();
+                                resolve();
+                            });
+                        } else {
+                            updateCellUI(index);
+                            if (index === gridState.selectedCell) {
+                                updatePreview();
+                            }
+                            saveToStorage();
+                            resolve();
+                        }
+                    }
+                };
+
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Generate video thumbnail
+        function generateVideoThumbnail(file) {
+            return new Promise((resolve, reject) => {
+                const video = document.createElement('video');
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                video.addEventListener('loadeddata', function () {
+                    this.currentTime = 0.1;
+                });
+
+                video.addEventListener('seeked', function () {
+                    canvas.width = this.videoWidth || 400;
+                    canvas.height = this.videoHeight || 300;
+                    ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+                    const thumbnail = canvas.toDataURL('image/jpeg', 0.7);
+                    resolve(thumbnail);
+                });
+
+                video.addEventListener('error', reject);
+
+                video.src = URL.createObjectURL(file);
+                video.load();
+            });
+        }
+
+        // Compress image
+        function compressImage(dataUrl) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    // Resize to max 800px
+                    let width = img.width;
+                    let height = img.height;
+                    const maxSize = 800;
+
+                    if (width > height && width > maxSize) {
+                        height = (height * maxSize) / width;
+                        width = maxSize;
+                    } else if (height > maxSize) {
+                        width = (width * maxSize) / height;
+                        height = maxSize;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    resolve(canvas.toDataURL('image/jpeg', 0.8));
+                };
+                img.src = dataUrl;
+            });
+        }
+
+        // Simple hash function for password (using a simple approach)
+        function hashPassword(password) {
+            let hash = 0;
+            for (let i = 0; i < password.length; i++) {
+                const char = password.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            return hash.toString(36);
+        }
+
+        // Set password
+        function setPassword() {
+            const password = document.getElementById('set-password').value;
+            if (!password) {
+                alert('Please enter a password');
+                return;
+            }
+            
+            if (password.length < 4) {
+                alert('Password must be at least 4 characters long');
+                return;
+            }
+            
+            saveUndoState();
+            gridState.passwordHash = hashPassword(password);
+            gridState.isLocked = true;
+            document.getElementById('set-password').value = '';
+            
+            // Show unlock section
+            document.getElementById('password-unlock-section').style.display = 'block';
+            document.getElementById('enable-password-protection').checked = true;
+            
+            updateLockStatus();
+            saveToStorage();
+            alert('Password set successfully. File is now locked.');
+        }
+
+        // Remove password protection
+        function removePassword() {
+            if (!gridState.passwordHash) {
+                alert('No password is set');
+                return;
+            }
+            
+            if (!confirm('Are you sure you want to remove password protection? The file will be permanently unlocked.')) {
+                return;
+            }
+            
+            saveUndoState();
+            gridState.passwordHash = null;
+            gridState.isLocked = false;
+            document.getElementById('user-password').value = '';
+            document.getElementById('set-password').value = '';
+            document.getElementById('enable-password-protection').checked = false;
+            document.getElementById('password-setup-section').style.display = 'none';
+            
+            updateLockStatus();
+            saveToStorage();
+            alert('Password protection removed. File is now unlocked.');
+        }
+
+        // Unlock with password
+        function unlockWithPassword() {
+            const password = document.getElementById('user-password').value;
+            if (!password) {
+                alert('Please enter the password');
+                return;
+            }
+            
+            if (!gridState.passwordHash) {
+                alert('No password is set for this file');
+                document.getElementById('user-password').value = '';
+                return;
+            }
+            
+            const enteredHash = hashPassword(password);
+            if (enteredHash === gridState.passwordHash) {
+                gridState.isLocked = false;
+                document.getElementById('user-password').value = '';
+                updateLockStatus();
+                alert('File unlocked! You can now edit.');
+            } else {
+                alert('Incorrect password. Access denied.');
+                document.getElementById('user-password').value = '';
+            }
+        }
+
+        // Update lock status UI
+        function updateLockStatus() {
+            const lockStatus = document.getElementById('lock-status');
+            const enableCheckbox = document.getElementById('enable-password-protection');
+            const passwordSection = document.getElementById('password-setup-section');
+            const unlockSection = document.getElementById('password-unlock-section');
+            
+            if (gridState.passwordHash) {
+                // Password is set
+                enableCheckbox.checked = true;
+                passwordSection.style.display = 'block';
+                
+                if (gridState.isLocked) {
+                    lockStatus.innerHTML = '<i class="fas fa-lock"></i> Locked';
+                    lockStatus.style.color = 'var(--danger)';
+                    unlockSection.style.display = 'block';
+                } else {
+                    lockStatus.innerHTML = '<i class="fas fa-unlock"></i> Unlocked';
+                    lockStatus.style.color = 'var(--success)';
+                    unlockSection.style.display = 'block';
+                }
+            } else {
+                // No password set
+                lockStatus.innerHTML = '<i class="fas fa-unlock-alt"></i> No Password';
+                lockStatus.style.color = 'var(--gray)';
+                enableCheckbox.checked = false;
+                passwordSection.style.display = 'none';
+                unlockSection.style.display = 'none';
+            }
+            updateEditability();
+        }
+
+        // Update editability based on lock status
+        function updateEditability() {
+            const isEditable = !gridState.passwordHash || !gridState.isLocked;
+            const editableElements = [
+                'apply-btn', 'media-upload', 'overlay-upload', 'apply-caption-btn',
+                'mark-task-btn', 'clear-cell-btn', 'clear-all-btn', 'copy-btn',
+                'paste-btn', 'open-cell-editor-btn', 'journal-title', 'journal-description',
+                'text-font-family', 'text-font-size', 'text-line-height', 'text-opacity',
+                'caption-size', 'overlay-size', 'reset-overlay-size-btn', 'delete-overlay-btn'
+            ];
+            
+            editableElements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.disabled = !isEditable;
+                    if (!isEditable) {
+                        element.style.opacity = '0.5';
+                        element.style.cursor = 'not-allowed';
+                    } else {
+                        element.style.opacity = '1';
+                        element.style.cursor = '';
+                    }
+                }
+            });
+            
+            // Disable grid cell selection
+            const gridCells = document.querySelectorAll('.grid-cell');
+            gridCells.forEach(cell => {
+                if (!isEditable) {
+                    cell.style.pointerEvents = 'none';
+                    cell.style.opacity = '0.7';
+                } else {
+                    cell.style.pointerEvents = '';
+                    cell.style.opacity = '1';
+                }
+            });
+        }
+
+        // Check if editing is allowed
+        function checkEditPermission() {
+            // If password protection is not enabled, allow editing
+            if (!gridState.passwordHash) {
+                return true;
+            }
+            
+            // If password is set but file is locked, require unlock
+            if (gridState.passwordHash && gridState.isLocked) {
+                alert('File is locked. Please enter the password to unlock.');
+                // Show password section if hidden
+                document.getElementById('enable-password-protection').checked = true;
+                document.getElementById('password-setup-section').style.display = 'block';
+                document.getElementById('password-unlock-section').style.display = 'block';
+                document.getElementById('user-password').focus();
+                return false;
+            }
+            return true;
+        }
+
+        // Handle overlay image upload
+        function handleOverlayUpload(e) {
+            if (!checkEditPermission()) {
+                e.target.value = '';
+                return;
+            }
+            
+            if (gridState.selectedCell === null) {
+                alert('Please select a cell first');
+                e.target.value = '';
+                return;
+            }
+
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file');
+                e.target.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                saveUndoState();
+                const cell = gridState.cells[gridState.selectedCell];
+                
+                // Initialize overlay position and filters if not set
+                if (cell.overlayImageX === undefined || cell.overlayImageX === null) {
+                    cell.overlayImageX = 50;
+                }
+                if (cell.overlayImageY === undefined || cell.overlayImageY === null) {
+                    cell.overlayImageY = 50;
+                }
+                if (cell.overlayOpacity === undefined || cell.overlayOpacity === null) {
+                    cell.overlayOpacity = 100;
+                }
+                if (cell.overlayBrightness === undefined || cell.overlayBrightness === null) {
+                    cell.overlayBrightness = 100;
+                }
+                if (cell.overlayContrast === undefined || cell.overlayContrast === null) {
+                    cell.overlayContrast = 100;
+                }
+                if (cell.overlaySaturation === undefined || cell.overlaySaturation === null) {
+                    cell.overlaySaturation = 100;
+                }
+                
+                // Compress if needed
+                if (document.getElementById('compress-images').checked) {
+                    compressImage(e.target.result).then(compressed => {
+                        cell.overlayImageUrl = compressed;
+                        updateCellUI(gridState.selectedCell);
+                        updatePreview();
+                        saveToStorage();
+                        
+                        // Show overlay controls
+                        document.getElementById('overlay-controls').style.display = 'block';
+                        document.getElementById('overlay-size').value = cell.overlayImageSize || 50;
+                        document.getElementById('overlay-size-value').textContent = cell.overlayImageSize || 50;
+                    });
+                } else {
+                    cell.overlayImageUrl = e.target.result;
+                    updateCellUI(gridState.selectedCell);
+                    updatePreview();
+                    saveToStorage();
+                    
+                    // Show overlay controls
+                    document.getElementById('overlay-controls').style.display = 'block';
+                    document.getElementById('overlay-size').value = cell.overlayImageSize || 50;
+                    document.getElementById('overlay-size-value').textContent = cell.overlayImageSize || 50;
+                }
+            };
+            reader.readAsDataURL(file);
+            e.target.value = '';
+        }
+
+        // Proceed to next cell
+        function proceedToNextCell() {
+            const totalCells = gridState.size * gridState.size;
+            let nextIndex;
+            
+            if (gridState.selectedCell === null) {
+                nextIndex = 0;
+            } else {
+                nextIndex = (gridState.selectedCell + 1) % totalCells;
+            }
+            
+            selectCell(nextIndex);
+            const cellNumber = nextIndex + 1;
+            alert(`Now editing Cell ${cellNumber} of ${totalCells}`);
+        }
+
+        // Navigate cell (up, down, left, right)
+        function navigateCell(direction) {
+            if (gridState.selectedCell === null) {
+                selectCell(0);
+                return;
+            }
+
+            const currentIndex = gridState.selectedCell;
+            const size = gridState.size;
+            let newIndex = currentIndex;
+
+            switch(direction) {
+                case 'up':
+                    if (currentIndex >= size) {
+                        newIndex = currentIndex - size;
+                    }
+                    break;
+                case 'down':
+                    if (currentIndex < size * (size - 1)) {
+                        newIndex = currentIndex + size;
+                    }
+                    break;
+                case 'left':
+                    if (currentIndex % size !== 0) {
+                        newIndex = currentIndex - 1;
+                    }
+                    break;
+                case 'right':
+                    if (currentIndex % size !== size - 1) {
+                        newIndex = currentIndex + 1;
+                    }
+                    break;
+            }
+
+            if (newIndex !== currentIndex) {
+                selectCell(newIndex);
+            } else {
+                showToast(`Cannot move ${direction} from this cell`);
+            }
+        }
+
+        // Make overlay image draggable
+        function makeOverlayDraggable(imgElement, cellIndex) {
+            let isDragging = false;
+            let startX, startY, startLeft, startTop;
+
+            imgElement.addEventListener('mousedown', function(e) {
+                e.stopPropagation();
+                isDragging = true;
+                
+                const cell = gridState.cells[cellIndex];
+                const rect = imgElement.parentElement.getBoundingClientRect();
+                
+                startX = e.clientX;
+                startY = e.clientY;
+                startLeft = cell.overlayImageX || 50;
+                startTop = cell.overlayImageY || 50;
+                
+                imgElement.style.cursor = 'grabbing';
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (!isDragging) return;
+                
+                const cell = gridState.cells[cellIndex];
+                const rect = imgElement.parentElement.getBoundingClientRect();
+                
+                const deltaX = ((e.clientX - startX) / rect.width) * 100;
+                const deltaY = ((e.clientY - startY) / rect.height) * 100;
+                
+                let newX = startLeft + deltaX;
+                let newY = startTop + deltaY;
+                
+                // Constrain to cell bounds (0-100%)
+                newX = Math.max(0, Math.min(100, newX));
+                newY = Math.max(0, Math.min(100, newY));
+                
+                imgElement.style.left = `${newX}%`;
+                imgElement.style.top = `${newY}%`;
+            });
+
+            document.addEventListener('mouseup', function() {
+                if (isDragging) {
+                    isDragging = false;
+                    imgElement.style.cursor = 'move';
+                    
+                    // Save position
+                    const cell = gridState.cells[cellIndex];
+                    const rect = imgElement.parentElement.getBoundingClientRect();
+                    const imgRect = imgElement.getBoundingClientRect();
+                    
+                    const centerX = (imgRect.left + imgRect.width / 2 - rect.left) / rect.width * 100;
+                    const centerY = (imgRect.top + imgRect.height / 2 - rect.top) / rect.height * 100;
+                    
+                    cell.overlayImageX = Math.max(0, Math.min(100, centerX));
+                    cell.overlayImageY = Math.max(0, Math.min(100, centerY));
+                    
+                    saveUndoState();
+                    saveToStorage();
+                }
+            });
+
+            // Touch support for mobile
+            imgElement.addEventListener('touchstart', function(e) {
+                e.stopPropagation();
+                isDragging = true;
+                
+                const cell = gridState.cells[cellIndex];
+                const touch = e.touches[0];
+                
+                startX = touch.clientX;
+                startY = touch.clientY;
+                startLeft = cell.overlayImageX || 50;
+                startTop = cell.overlayImageY || 50;
+            });
+
+            document.addEventListener('touchmove', function(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+                
+                const cell = gridState.cells[cellIndex];
+                const touch = e.touches[0];
+                const rect = imgElement.parentElement.getBoundingClientRect();
+                
+                const deltaX = ((touch.clientX - startX) / rect.width) * 100;
+                const deltaY = ((touch.clientY - startY) / rect.height) * 100;
+                
+                let newX = startLeft + deltaX;
+                let newY = startTop + deltaY;
+                
+                newX = Math.max(0, Math.min(100, newX));
+                newY = Math.max(0, Math.min(100, newY));
+                
+                imgElement.style.left = `${newX}%`;
+                imgElement.style.top = `${newY}%`;
+            });
+
+            document.addEventListener('touchend', function() {
+                if (isDragging) {
+                    isDragging = false;
+                    
+                    const cell = gridState.cells[cellIndex];
+                    const rect = imgElement.parentElement.getBoundingClientRect();
+                    const imgRect = imgElement.getBoundingClientRect();
+                    
+                    const centerX = (imgRect.left + imgRect.width / 2 - rect.left) / rect.width * 100;
+                    const centerY = (imgRect.top + imgRect.height / 2 - rect.top) / rect.height * 100;
+                    
+                    cell.overlayImageX = Math.max(0, Math.min(100, centerX));
+                    cell.overlayImageY = Math.max(0, Math.min(100, centerY));
+                    
+                    saveUndoState();
+                    saveToStorage();
+                }
+            });
+        }
+
+        // Apply caption
+        function applyCaption() {
+            if (!checkEditPermission()) return;
+            
+            const caption = document.getElementById('caption-text').value;
+            const applyTo = document.getElementById('apply-caption-to').value;
+            const captionSize = parseInt(document.getElementById('caption-size').value) || 12;
+
+            saveUndoState();
+
+            let count = 0;
+            gridState.cells.forEach((cell, index) => {
+                let shouldApply = false;
+
+                switch (applyTo) {
+                    case 'selected':
+                        shouldApply = index === gridState.selectedCell;
+                        break;
+                    case 'all':
+                        shouldApply = cell.type !== 'empty';
+                        break;
+                    case 'images':
+                        shouldApply = cell.type === 'image';
+                        break;
+                    case 'videos':
+                        shouldApply = cell.type === 'video';
+                        break;
+                }
+
+                if (shouldApply) {
+                    cell.caption = caption;
+                    cell.captionSize = captionSize;
+                    updateCellUI(index);
+                    count++;
+                }
+            });
+
+            if (count > 0) {
+                alert(`Caption applied to ${count} cell(s)`);
+                saveToStorage();
+            }
+
+            document.getElementById('caption-text').value = '';
+        }
+
+        // Export journal
+        async function exportJournal() {
+            const exportType = document.querySelector('.export-btn.active').dataset.export;
+            const quality = document.getElementById('export-quality').value;
+
+            showLoading('Preparing export...');
+
+            try {
+                if (exportType === 'screenshot') {
+                    await exportScreenshot(quality);
+                } else if (exportType === 'html') {
+                    await exportHTML(quality);
+                } else if (exportType === 'zip') {
+                    await exportZIP(quality);
+                } else if (exportType === 'mp4') {
+                    await exportMP4(quality);
+                }
+            } catch (error) {
+                console.error('Export error:', error);
+                alert('Error during export. Please try again.');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Export screenshot
+        async function exportScreenshot(quality) {
+            const scale = quality === 'high' ? 3 : quality === 'medium' ? 2 : 1;
+            const gridContainer = document.querySelector('.grid-container');
+
+            // Save original styles
+            const originalHeight = gridContainer.style.height;
+            const originalOverflow = gridContainer.style.overflow;
+
+            // Expand to fit content
+            gridContainer.style.height = 'auto';
+            gridContainer.style.overflow = 'visible';
+
+            // Inject disclaimer
+            const disclaimerDiv = document.createElement('div');
+            disclaimerDiv.className = 'grid-screenshot-disclaimer';
+            disclaimerDiv.innerHTML = `
+                <div style="text-align: center; margin-top: 20px; padding: 10px; color: #666; font-size: 12px; font-style: italic; border-top: 1px solid #e2e8f0;">
+                      • Built with MODULA<br>
+                      Sample. Share. Shape. Credit: @OBI_JHUAN<br>
+                      MODULA is the canvas, not the author<br>
+                      Users are responsible for content they make or share<br>
+                      Educational and fictional content only unless stated •
+                </div>
+            `;
+            gridContainer.appendChild(disclaimerDiv);
+
+            try {
+                const canvas = await html2canvas(gridContainer, {
+                    scale: scale,
+                    useCORS: true,
+                    backgroundColor: '#ffffff',
+                    onclone: (clonedDoc) => {
+                        // Ensure the cloned disclaimer is visible
+                        const clonedDisclaimer = clonedDoc.querySelector('.grid-screenshot-disclaimer');
+                        if (clonedDisclaimer) {
+                            clonedDisclaimer.style.display = 'block';
+                        }
+                    }
+                });
+
+                canvas.toBlob(function (blob) {
+                    const link = document.createElement('a');
+                    link.download = `MODULA-Capture-${Date.now()}.png`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                }, 'image/png', 0.9);
+            } catch (err) {
+                console.error("Screenshot failed:", err);
+                alert("Screenshot failed. Please try again.");
+            } finally {
+                // Restore styles and remove disclaimer
+                gridContainer.style.height = originalHeight;
+                gridContainer.style.overflow = originalOverflow;
+                if (disclaimerDiv.parentNode) {
+                    disclaimerDiv.parentNode.removeChild(disclaimerDiv);
+                }
+            }
+        }
+
+        // Export HTML
+        async function exportHTML(quality) {
+            const title = document.getElementById('journal-title').value;
+            const description = document.getElementById('journal-description').value;
+
+            let html = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="user-code" content="${gridState.userCode || ''}">
+    <meta name="password-hash" content="${gridState.passwordHash || ''}">
+    <title>${title || 'MediGrid Journal'}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .journal { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .grid { display: grid; grid-template-columns: repeat(${gridState.size}, 1fr); gap: 10px; margin: 30px 0; }
+        .cell { aspect-ratio: 1; border: 2px solid #e2e8f0; border-radius: 10px; overflow: hidden; position: relative; }
+        .cell img, .cell video { width: 100%; height: 100%; object-fit: cover; }
+        .cell audio { width: 100%; }
+        .cell-text { padding: 15px; overflow-y: auto; max-height: 100%; word-wrap: break-word; height: 100%; box-sizing: border-box; }
+        .caption { position: absolute; bottom: 0; color: white; padding: 8px; font-size: 12px; width: 100%; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 0 3px #000, 0 0 3px #000; font-weight: 600; }
+        .task { position: absolute; top: 8px; right: 8px; background: #4ade80; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="journal">
+        <h1>${title || 'MediGrid Journal'}</h1>
+        ${description ? `<p>${description}</p>` : ''}
+        
+        <div class="grid">`;
+
+            gridState.cells.forEach(cell => {
+                html += `<div class="cell">`;
+
+                if (cell.type === 'text') {
+                    html += `<div class="cell-text" style="padding: 15px; overflow-y: auto; max-height: 100%; word-wrap: break-word; height: 100%; box-sizing: border-box;">${cell.content.replace(/\n/g, '<br>')}</div>`;
+                } else if (cell.type === 'image' && cell.mediaUrl) {
+                    html += `<img src="${cell.mediaUrl}" alt="Image">`;
+                } else if (cell.type === 'video' && cell.mediaUrl) {
+                    html += `<video controls><source src="${cell.mediaUrl}" type="video/mp4"></video>`;
+                } else if (cell.type === 'audio' && cell.mediaUrl) {
+                    html += `<div style="background: linear-gradient(135deg, #4361ee, #3a0ca3); color: white; padding: 20px; text-align: center; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <i class="fas fa-music" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <audio controls style="width: 100%;"><source src="${cell.mediaUrl}" type="audio/mpeg"></audio>
+                    </div>`;
+                }
+
+                if (cell.overlayImageUrl) {
+                    const overlayX = cell.overlayImageX || 50;
+                    const overlayY = cell.overlayImageY || 50;
+                    const overlayOpacity = cell.overlayOpacity || 100;
+                    const overlayBrightness = cell.overlayBrightness || 100;
+                    const overlayContrast = cell.overlayContrast || 100;
+                    const overlaySaturation = cell.overlaySaturation || 100;
+                    html += `<img src="${cell.overlayImageUrl}" alt="Overlay" style="position: absolute; top: ${overlayY}%; left: ${overlayX}%; transform: translate(-50%, -50%); width: ${cell.overlayImageSize || 50}%; height: auto; max-width: 90%; max-height: 90%; z-index: 5; pointer-events: none; filter: opacity(${overlayOpacity / 100}) brightness(${overlayBrightness / 100}) contrast(${overlayContrast / 100}) saturate(${overlaySaturation / 100});">`;
+                }
+
+                if (cell.caption) {
+                    const captionSize = cell.captionSize || 12;
+                    html += `<div class="caption" style="font-size: ${captionSize}px;">${cell.caption}</div>`;
+                }
+
+                if (cell.isTask) {
+                    html += `<div class="task">✓</div>`;
+                }
+
+                html += `</div>`;
+            });
+
+            html += `
+        </div>
+        
+        <p style="text-align: center; color: #666; margin-top: 30px;">
+            Built with MODULA<br>
+            MODULA is the canvas, not the author<br>
+            Users are responsible for content they make or share<br>
+            Educational and fictional content only unless stated • ${new Date().toLocaleDateString()}<br>
+            Sample. Share. Shape. Credit: @OBI_JHUAN
+        </p>
+    </div>
+</body>
+</html>`;
+
+            const blob = new Blob([html], { type: 'text/html' });
+            const link = document.createElement('a');
+            link.download = `mediagrid-journal-${Date.now()}.html`;
+            link.href = URL.createObjectURL(blob);
+            link.click();
+        }
+
+        // Export ZIP
+        async function exportZIP(quality) {
+            const zip = new JSZip();
+            const mediaFolder = zip.folder('media');
+
+            // Create HTML file
+            let html = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>MediGrid Journal</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(${gridState.size}, 1fr); gap: 10px; margin: 20px 0; }
+        .cell { aspect-ratio: 1; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; position: relative; }
+        .cell img, .cell video { width: 100%; height: 100%; object-fit: cover; }
+    </style>
+</head>
+<body>
+    <h1>MediGrid Journal</h1>
+    
+    <div class="grid">`;
+
+            let fileIndex = 0;
+            gridState.cells.forEach(cell => {
+                html += `<div class="cell">`;
+
+                if (cell.type === 'text') {
+                    html += `<div class="cell-text" style="padding: 10px; overflow-y: auto; max-height: 100%; word-wrap: break-word; height: 100%; box-sizing: border-box;">${cell.content.replace(/\n/g, '<br>')}</div>`;
+                } else if (cell.type === 'image' && cell.mediaFile) {
+                    const fileName = `image-${fileIndex}.jpg`;
+                    html += `<img src="media/${fileName}" alt="Image">`;
+                    mediaFolder.file(fileName, cell.mediaFile);
+                    fileIndex++;
+                } else if (cell.type === 'video' && cell.mediaFile) {
+                    const fileName = `video-${fileIndex}.mp4`;
+                    html += `<video controls><source src="media/${fileName}" type="video/mp4"></video>`;
+                    mediaFolder.file(fileName, cell.mediaFile);
+                    fileIndex++;
+                } else if (cell.type === 'audio' && cell.mediaFile) {
+                    const ext = cell.mediaFile.name.split('.').pop() || 'mp3';
+                    const fileName = `audio-${fileIndex}.${ext}`;
+                    html += `<div style="background: linear-gradient(135deg, #4361ee, #3a0ca3); color: white; padding: 20px; text-align: center; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <i class="fas fa-music" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <audio controls style="width: 100%;"><source src="media/${fileName}" type="audio/mpeg"></audio>
+                    </div>`;
+                    mediaFolder.file(fileName, cell.mediaFile);
+                    fileIndex++;
+                }
+
+                html += `</div>`;
+            });
+
+            html += `
+    </div>
+    
+    <p style="text-align: center; color: #666; margin-top: 30px;">
+        Built with MODULA<br>
+        Sample. Share. Shape. Credit: @OBI_JHUAN<br>
+        MODULA is the canvas, not the author<br>
+        Users are responsible for content they make or share<br>
+        Educational and fictional content only unless stated • ${new Date().toLocaleDateString()}<br>
+    </p>
+</body>
+</html>`;
+
+            zip.file('index.html', html);
+            zip.file('README.txt', 'MediGrid Journal - Open index.html to view');
+
+            const content = await zip.generateAsync({ type: 'blob' });
+            saveAs(content, `mediagrid-${Date.now()}.zip`);
+        }
+
+        // Export MP4
+        async function exportMP4(quality) {
+            // For now, show instructions since MP4 export needs more complex setup
+            hideLoading();
+
+            alert(`MP4 Export Instructions:
+
+1. Take a screen recording of your grid
+2. Or export as HTML and convert using video software
+3. For automatic MP4 export, we need server-side processing
+
+We're working on adding native MP4 export in the next update!`);
+        }
+
+        // Show loading
+        function showLoading(message) {
+            document.getElementById('loading-text').textContent = message;
+            document.getElementById('loading-overlay').classList.add('active');
+        }
+
+        // Hide loading
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.remove('active');
+        }
+
+        // Save to localStorage
+        function saveToStorage() {
+            try {
+                const data = {
+                    gridState: gridState,
+                    title: document.getElementById('journal-title').value,
+                    description: document.getElementById('journal-description').value,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('mediagrid_session', JSON.stringify(data));
+            } catch (e) {
+                console.warn('Failed to save to localStorage');
+            }
+        }
+
+        // Import HTML file
+        function handleImport(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                try {
+                    const htmlContent = event.target.result;
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(htmlContent, 'text/html');
+
+                    // Extract password hash
+                    const passwordHashMeta = doc.querySelector('meta[name="password-hash"]');
+                    if (passwordHashMeta && passwordHashMeta.content) {
+                        const importedPasswordHash = passwordHashMeta.content;
+                        
+                        // Prompt for password
+                        const password = prompt('This file is password protected. Please enter the password to unlock:');
+                        if (!password) {
+                            alert('Password required to import this file.');
+                            e.target.value = '';
+                            return;
+                        }
+                        
+                        const enteredHash = hashPassword(password);
+                        if (enteredHash !== importedPasswordHash) {
+                            alert('Incorrect password. Import cancelled.');
+                            e.target.value = '';
+                            return;
+                        }
+                        
+                        // Password correct, set it and unlock
+                        gridState.passwordHash = importedPasswordHash;
+                        gridState.isLocked = false;
+                        updateLockStatus();
+                        alert('Password verified! File imported and unlocked.');
+                    } else {
+                        // No password, unlock by default
+                        gridState.isLocked = false;
+                        updateLockStatus();
+                    }
+
+                    // Extract User Code
+                    const userCodeMeta = doc.querySelector('meta[name="user-code"]');
+                    if (userCodeMeta && userCodeMeta.content) {
+                        gridState.userCode = userCodeMeta.content;
+                    }
+
+                    // Extract title
+
+                    // Extract title
+                    const titleElement = doc.querySelector('.title, h1');
+                    if (titleElement) {
+                        document.getElementById('journal-title').value = titleElement.textContent.trim();
+                        document.getElementById('display-title').textContent = titleElement.textContent.trim();
+                    }
+
+                    // Extract date
+                    const dateElement = doc.querySelector('.date, .grid-subtitle');
+                    if (dateElement) {
+                        // Date is usually in the subtitle, but we'll keep it simple
+                    }
+
+                    // Extract grid cells
+                    const cells = doc.querySelectorAll('.cell, .grid .cell');
+                    if (cells.length > 0) {
+                        // Determine grid size
+                        const gridElement = doc.querySelector('.grid');
+                        if (gridElement) {
+                            const gridStyle = gridElement.style.gridTemplateColumns ||
+                                window.getComputedStyle(gridElement).gridTemplateColumns;
+                            const columnCount = gridStyle.split('repeat(')[1]?.split(',')[0] || '4';
+                            const size = parseInt(columnCount);
+
+                            if (size !== gridState.size) {
+                                if (confirm(`Imported grid is ${size}×${size}. Resize current grid?`)) {
+                                    initializeGrid(size);
+                                }
+                            }
+                        }
+
+                        // Process each cell
+                        cells.forEach((cellEl, index) => {
+                            if (index >= gridState.cells.length) return;
+
+                            const cell = gridState.cells[index];
+
+                            // Check for text
+                            const textEl = cellEl.querySelector('.text, div:not(.caption):not(.task)');
+                            if (textEl && !textEl.querySelector('img, video, audio')) {
+                                cell.type = 'text';
+                                cell.content = textEl.textContent.trim();
+                            }
+
+                            // Check for image
+                            const imgEl = cellEl.querySelector('img');
+                            if (imgEl) {
+                                cell.type = 'image';
+                                cell.mediaUrl = imgEl.src;
+                                // Try to get caption
+                                const captionEl = cellEl.querySelector('.caption');
+                                if (captionEl) {
+                                    cell.caption = captionEl.textContent.trim();
+                                }
+                            }
+
+                            // Check for video
+                            const videoEl = cellEl.querySelector('video');
+                            if (videoEl) {
+                                cell.type = 'video';
+                                const source = videoEl.querySelector('source');
+                                cell.mediaUrl = source ? source.src : videoEl.src;
+                                const captionEl = cellEl.querySelector('.caption');
+                                if (captionEl) {
+                                    cell.caption = captionEl.textContent.trim();
+                                }
+                            }
+
+                            // Check for audio
+                            const audioEl = cellEl.querySelector('audio');
+                            if (audioEl) {
+                                cell.type = 'audio';
+                                const source = audioEl.querySelector('source');
+                                cell.mediaUrl = source ? source.src : audioEl.src;
+                            }
+
+                            // Check for task marker
+                            const taskEl = cellEl.querySelector('.task');
+                            if (taskEl) {
+                                cell.isTask = true;
+                            }
+
+                            updateCellUI(index);
+                        });
+
+                        saveToStorage();
+                        updateEditability();
+                        alert('Grid imported successfully!');
+                    } else {
+                        alert('Could not find grid cells in the imported file.');
+                    }
+                    
+                    // Update lock status after import
+                    updateLockStatus();
+                } catch (error) {
+                    console.error('Import error:', error);
+                    alert('Error importing file. Please make sure it is a valid MediaGrid HTML file.');
+                }
+
+                e.target.value = '';
+            };
+
+            reader.readAsText(file);
+        }
+
+        // Load from localStorage
+        function loadFromStorage() {
+            try {
+                const saved = localStorage.getItem('mediagrid_session');
+                if (saved) {
+                    const data = JSON.parse(saved);
+
+                    if (data.gridState) {
+                        // Restore grid state
+                        gridState = data.gridState;
+
+                        // Update UI
+                        initializeGrid(gridState.size);
+
+                        // Restore cells and ensure backward compatibility
+                        for (let i = 0; i < gridState.cells.length && i < gridState.size * gridState.size; i++) {
+                            // Ensure overlay properties exist for backward compatibility
+                            if (gridState.cells[i].overlayImageUrl === undefined) {
+                                gridState.cells[i].overlayImageUrl = null;
+                            }
+                            if (gridState.cells[i].overlayImageSize === undefined) {
+                                gridState.cells[i].overlayImageSize = 50;
+                            }
+                            if (gridState.cells[i].overlayImageX === undefined) {
+                                gridState.cells[i].overlayImageX = 50;
+                            }
+                            if (gridState.cells[i].overlayImageY === undefined) {
+                                gridState.cells[i].overlayImageY = 50;
+                            }
+                            if (gridState.cells[i].overlayOpacity === undefined) {
+                                gridState.cells[i].overlayOpacity = 100;
+                            }
+                            if (gridState.cells[i].overlayBrightness === undefined) {
+                                gridState.cells[i].overlayBrightness = 100;
+                            }
+                            if (gridState.cells[i].overlayContrast === undefined) {
+                                gridState.cells[i].overlayContrast = 100;
+                            }
+                            if (gridState.cells[i].overlaySaturation === undefined) {
+                                gridState.cells[i].overlaySaturation = 100;
+                            }
+                            if (gridState.cells[i].captionSize === undefined) {
+                                gridState.cells[i].captionSize = 12;
+                            }
+                            updateCellUI(i);
+                        }
+
+                        // Restore title and description
+                        if (data.title) {
+                            document.getElementById('journal-title').value = data.title;
+                            document.getElementById('display-title').textContent = data.title;
+                        }
+                        if (data.description) {
+                            document.getElementById('journal-description').value = data.description;
+                            document.getElementById('display-date').textContent = data.description;
+                        }
+
+                        console.log('Session restored from localStorage');
+                    }
+
+                    // Restore User Code reference if lost or ensure display matches state
+                    if (gridState.userCode) {
+                        // User code is now just for backward compatibility
+                    }
+                    
+                    // Restore password state
+                    if (gridState.passwordHash === undefined) {
+                        gridState.passwordHash = null;
+                        gridState.isLocked = false;
+                    }
+                    
+                    // Update lock status and editability
+                    updateLockStatus();
+                }
+            } catch (e) {
+                console.warn('Failed to load from localStorage');
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', initApp);
+
+        // Auto-fit text to cell
+        function autoFitText(element) {
+            if (!element) return;
+
+            // Get base font size from grid state if possible, or current style
+            // We'll trust the current style which was set in updateCellUI
+            let size = parseInt(element.style.fontSize) || 14;
+            const minSize = 8;
+
+            // Reset to avoid stuck shrinkage (optional, but good if content deleted)
+            // Ideally we should know the 'target' font size (cell.textFontSize).
+            // But we don't have easy access to 'cell' here without lookup.
+            // For shrinking, we just check overflow.
+
+            // Allow growing back? 
+            // To allow growing back, we need the original max size.
+            // Let's rely on updateCellUI setting the 'max' size initially.
+            // But if we type more, we shrink. If we delete, we might stay small unless we reset.
+            // Strategy: Always reset to 'base' size first, then shrink.
+
+            try {
+                // Find cell index to get base size
+                const cellEl = element.closest('.grid-cell');
+                if (cellEl) {
+                    const index = parseInt(cellEl.dataset.index);
+                    if (!isNaN(index) && gridState.cells[index]) {
+                        size = gridState.cells[index].textFontSize || 14;
+                    }
+                }
+            } catch (e) { }
+
+            element.style.fontSize = size + 'px';
+
+            // Shrink loop
+            while (element.scrollHeight > element.clientHeight && size > minSize) {
+                size--;
+                element.style.fontSize = size + 'px';
+            }
+        }
+    </script>
+</body>
+
+</html>
